@@ -16,7 +16,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # ── Config — UPDATE THESE ──
-GITHUB_USERNAME="your-github-username"
+GITHUB_USERNAME="temporaryperson023"
 REPO_NAME="haltdos-docs"
 BRANCH="gh-pages"
 COMMIT_MSG="docs: update $(date '+%Y-%m-%d %H:%M')"
