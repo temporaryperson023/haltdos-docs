@@ -1,551 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Binary Components Upload · MyDocs</title>
+    <title>Binary Components Upload · Haltdos Docs</title>
     <link rel="stylesheet" href="../style.css" />
-    <style>
-        .doc-wrapper {
-            max-width: 70vw;
-            margin: 0 auto;
-            padding: 40px 40px 100px;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #6a5acd;
-            text-decoration: none;
-            margin-bottom: 32px;
-            transition: gap 0.2s;
-        }
-
-        .back-btn:hover {
-            gap: 10px;
-        }
-
-        .doc-header {
-            margin-bottom: 40px;
-            padding-bottom: 28px;
-            border-bottom: 1px solid #e8e8e3;
-        }
-
-        .doc-header .tag {
-            margin-bottom: 14px;
-            display: inline-block;
-        }
-
-        .doc-header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-
-        .doc-header .doc-meta {
-            font-size: 0.85rem;
-            color: #aaa;
-        }
-
-        /* ── Section headings ── */
-        .doc-content h2 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin: 48px 0 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e8e8e3;
-            letter-spacing: -0.3px;
-        }
-
-        .doc-content h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #333;
-            margin: 24px 0 8px;
-        }
-
-        .doc-content p {
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.75;
-            margin-bottom: 16px;
-        }
-
-        .doc-content ul,
-        .doc-content ol {
-            padding-left: 20px;
-            margin-bottom: 16px;
-        }
-
-        .doc-content li {
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.75;
-            margin-bottom: 6px;
-        }
-
-        /* ── Inline code ── */
-        .doc-content code {
-            background-color: #f0f0ec;
-            border: 1px solid #e0e0d8;
-            border-radius: 5px;
-            padding: 2px 7px;
-            font-size: 0.85rem;
-            font-family: 'Courier New', monospace;
-            color: #6a5acd;
-        }
-
-        /* ── Code block ── */
-        .doc-content pre {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px 24px;
-            overflow-x: auto;
-            margin-bottom: 24px;
-        }
-
-        .doc-content pre code {
-            background: none;
-            border: none;
-            padding: 0;
-            color: #e8e8e3;
-            font-size: 0.875rem;
-            line-height: 1.7;
-        }
-
-        /* ── Callout — purple (info) ── */
-        .callout {
-            background-color: #f5f2ff;
-            border-left: 4px solid #6a5acd;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-        }
-
-        .callout p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #4a3f8f;
-        }
-
-        /* ── Warning callout — amber ── */
-        .callout.warning {
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .callout.warning p {
-            color: #92400e;
-        }
-
-        /* ── Component badge ── */
-        .component-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #f5f2ff;
-            border: 1px solid #d8d0f5;
-            border-radius: 10px;
-            padding: 6px 14px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #6a5acd;
-            margin-bottom: 16px;
-        }
-
-        /* ── Step indicator ── */
-        .step-label {
-            display: inline-block;
-            background-color: #6a5acd;
-            color: #fff;
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 999px;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        /* ── Divider ── */
-        .doc-content hr {
-            border: none;
-            border-top: 1px solid #e8e8e3;
-            margin: 40px 0;
-        }
-
-        /* ── Doc footer ── */
-        .doc-footer {
-            margin-top: 60px;
-            padding-top: 24px;
-            border-top: 1px solid #e8e8e3;
-            font-size: 0.82rem;
-            color: #bbb;
-        }
-    </style>
 </head>
 
 <body>
 
-    <!-- ── Navbar ── -->
-    <nav class="navbar">
-        <div class="logo">My<span>Docs</span></div>
-    </nav>
+    <div id="progress-bar"></div>
 
-    <div class="doc-wrapper">
-
-        <!-- ── Back ── -->
-        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
-
-        <!-- ── Header ── -->
-        <div class="doc-header">
-            <span class="tag done">Done</span>
-            <h1>Binary Components Upload Steps</h1>
-            <div class="doc-meta">ADC Build &amp; Release Documentation &nbsp;·&nbsp; Last updated April 2025
-                &nbsp;·&nbsp; 10 min read</div>
-        </div>
-
-        <!-- ── Content ── -->
-        <div class="doc-content">
-
-            <!-- PREREQUISITES -->
-            <h2>Prerequisites</h2>
-            <ol>
-                <li>Clone the <code>haltdos hd-tools</code> repository.</li>
-                <li>Run the required command to clone all dependent projects.</li>
-            </ol>
-
-            <!-- INITIAL SETUP -->
-            <h2>Initial Setup</h2>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate to DevOps Directory</h3>
-            <pre><code>cd /git/hd-tool-devops</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Checkout &amp; Build All Projects</h3>
-            <pre><code>./devops checkout && ./devops build</code></pre>
-            <ul>
-                <li>Switches all repositories to <code>release-candidate</code></li>
-                <li>Pulls latest code for all projects</li>
-            </ul>
-
-            <hr />
-
-            <!-- 1. CLI -->
-            <h2>1. CLI</h2>
-            <div class="component-badge">📁 /git/aux/platform-exp-aux-cli/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-exp-aux-cli/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → CLI</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → CLI → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 2. CONTROLLER -->
-            <h2>2. Controller</h2>
-            <div class="component-badge">📁 /git/api/platform-api-console/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/api/platform-api-console/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → Controller</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → Controller → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 3. OFFLOADER -->
-            <h2>3. Offloader (Two Types)</h2>
-
-            <h3>🔹 A. Ubuntu Offloader (Local Machine)</h3>
-            <p>Built on local Ubuntu systems.</p>
-            <div class="component-badge">📁 /git/api/platform-api-console/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/api/platform-api-console/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → Offloader</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <h3>🔹 B. Rocky (RHEL) Offloader — <code>offloader-rhel</code></h3>
-            <div class="callout warning">
-                <p>⚠️ <strong>Important:</strong> Built ONLY on Rocky Linux VM (Office VMs). Do NOT build this on your
-                    local Ubuntu machine.</p>
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
             </div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Login to Rocky VM</h3>
-            <p>SSH into the designated Rocky Linux office VM before proceeding.</p>
-
-            <span class="step-label">Step 2</span>
-            <h3>Clone Repository</h3>
-            <pre><code>git clone &lt;offloader-repo-url&gt;
-cd &lt;repo-folder&gt;</code></pre>
-
-            <span class="step-label">Step 3</span>
-            <h3>Switch Branch &amp; Update</h3>
-            <pre><code>git checkout release-candidate
-git pull</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Transfer Build to Local Machine</h3>
-            <pre><code>scp &lt;generated_tar_file&gt; &lt;local_user&gt;@&lt;local_ip&gt;:&lt;destination_path&gt;</code></pre>
-
-            <span class="step-label">Step 6</span>
-            <h3>Generate Hash (on local machine)</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 7</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong></p>
-
-            <div class="callout">
-                <p>💡 <strong>Note:</strong> This Rocky build process applies to all RHEL-based components — Offloader,
-                    Balancer, Gateway, and any similar builds. All follow the same pattern: build on Rocky VM → transfer
-                    via SCP → upload from local system.</p>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
             </div>
-
-            <hr />
-
-            <!-- 4. SYNC -->
-            <h2>4. Sync</h2>
-            <div class="component-badge">📁 /git/aux/platform-aux-sync/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-aux-sync/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → Sync</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → Sync → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 5. COLLECTOR -->
-            <h2>5. Collector</h2>
-            <div class="component-badge">📁 /git/aux/platform-aux-collector/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-aux-collector/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → Collector</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → Collector → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 6. LOG AGENT -->
-            <h2>6. Log Agent (L-Agent)</h2>
-            <div class="component-badge">📁 /git/aux/platform-aux-lagent/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-aux-lagent/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → log-agent</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → log-agent → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 7. METRIC AGENT -->
-            <h2>7. Metric Agent (M-Agent)</h2>
-            <div class="component-badge">📁 /git/aux/platform-aux-magent/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-aux-magent/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → metric-agent</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → metric-agent → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
-            <hr />
-
-            <!-- 8. NODE METRICS -->
-            <h2>8. Node Metrics</h2>
-            <div class="component-badge">📁 /git/aux/platform-aux-node-metrics/</div>
-
-            <span class="step-label">Step 1</span>
-            <h3>Navigate</h3>
-            <pre><code>cd /git/aux/platform-aux-node-metrics/</code></pre>
-
-            <span class="step-label">Step 2</span>
-            <h3>Check Latest Version</h3>
-            <p>Go to <strong>License Manager → Binary → node metrics</strong></p>
-
-            <span class="step-label">Step 3</span>
-            <h3>Build</h3>
-            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
-
-            <span class="step-label">Step 4</span>
-            <h3>Generate Hash</h3>
-            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
-
-            <span class="step-label">Step 5</span>
-            <h3>Upload</h3>
-            <p>Go to <strong>License Manager → Component → Binary → node metrics → Add Version</strong></p>
-            <ul>
-                <li>Description</li>
-                <li>SHA512 hash</li>
-                <li>Upload tar file</li>
-                <li>Click <strong>Confirm</strong></li>
-            </ul>
-
         </div>
-        <!-- ── End Content ── -->
-
-        <div class="doc-footer">
-            MyDocs · ADC Build &amp; Release Documentation
-        </div>
-
     </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item active" href="binary-components-upload.html"><span
+                        class="nav-item-icon">⚙️</span>Binary Components Upload<span
+                        class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Build & Release</span>
+                <span class="sep">›</span>
+                <span class="current">Binary Components Upload</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>Binary Components Upload Steps</h1>
+                    <div class="doc-meta">ADC Build & Release Documentation &nbsp;·&nbsp; Last updated April 2025
+                        &nbsp;·&nbsp; 10 min read</div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>Component-wise detailed guide for building and uploading all ADC binary components to the License
+                        Manager.</p>
+
+                    <h2 id="prerequisites">Prerequisites</h2>
+                    <ol>
+                        <li>Clone the <code>haltdos hd-tools</code> repository.</li>
+                        <li>Run the required command to clone all dependent projects.</li>
+                    </ol>
+
+                    <h2 id="initial-setup">Initial Setup</h2>
+
+                    <span class="step-label">Step 1</span>
+                    <h3>Navigate to DevOps Directory</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/hd-tool-devops</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 2</span>
+                    <h3>Checkout & Build All Projects</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>./devops checkout && ./devops build</code></pre>
+                    </div>
+                    <ul>
+                        <li>Switches all repositories to <code>release-candidate</code></li>
+                        <li>Pulls latest code for all projects</li>
+                    </ul>
+
+                    <h2 id="cli">1. CLI</h2>
+                    <div class="component-badge">📁 /git/aux/platform-exp-aux-cli/</div>
+
+                    <span class="step-label">Step 1</span>
+                    <h3>Navigate</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-exp-aux-cli/</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 2</span>
+                    <h3>Check Latest Version</h3>
+                    <p>Go to <strong>License Manager → Binary → CLI</strong></p>
+
+                    <span class="step-label">Step 3</span>
+                    <h3>Build</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 4</span>
+                    <h3>Generate Hash</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 5</span>
+                    <h3>Upload</h3>
+                    <p>Go to <strong>License Manager → Component → Binary → CLI → Add Version</strong></p>
+                    <ul>
+                        <li>Description</li>
+                        <li>SHA512 hash</li>
+                        <li>Upload tar file</li>
+                        <li>Click <strong>Confirm</strong></li>
+                    </ul>
+
+                    <h2 id="controller">2. Controller</h2>
+                    <div class="component-badge">📁 /git/api/platform-api-console/</div>
+
+                    <span class="step-label">Step 1</span>
+                    <h3>Navigate</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/api/platform-api-console/</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 2</span>
+                    <h3>Check Latest Version</h3>
+                    <p>Go to <strong>License Manager → Binary → Controller</strong></p>
+
+                    <span class="step-label">Step 3</span>
+                    <h3>Build</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 4</span>
+                    <h3>Generate Hash</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 5</span>
+                    <h3>Upload</h3>
+                    <p>Go to <strong>License Manager → Component → Binary → Controller → Add Version</strong></p>
+                    <ul>
+                        <li>Description</li>
+                        <li>SHA512 hash</li>
+                        <li>Upload tar file</li>
+                        <li>Click <strong>Confirm</strong></li>
+                    </ul>
+
+                    <h2 id="offloader">3. Offloader (Two Types)</h2>
+
+                    <h3>🔹 A. Ubuntu Offloader (Local Machine)</h3>
+                    <div class="component-badge">📁 /git/api/platform-api-console/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/api/platform-api-console/</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Binary → Offloader</strong></p>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                    <h3>🔹 B. Rocky (RHEL) Offloader — <code>offloader-rhel</code></h3>
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Important:</strong> Built ONLY on Rocky Linux VM (Office VMs).</p>
+                    </div>
+
+                    <span class="step-label">Step 1</span>
+                    <h3>Clone Repository (on Rocky VM)</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>git clone &lt;offloader-repo-url&gt;
+cd &lt;repo-folder&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 2</span>
+                    <h3>Switch Branch & Update</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>git checkout release-candidate
+git pull</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 3</span>
+                    <h3>Build</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 4</span>
+                    <h3>Transfer to Local Machine</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>scp &lt;generated_tar_file&gt; &lt;local_user&gt;@&lt;local_ip&gt;:&lt;destination_path&gt;</code></pre>
+                    </div>
+
+                    <span class="step-label">Step 5</span>
+                    <h3>Generate Hash & Upload</h3>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong></p>
+
+                    <div class="callout info">
+                        <p>💡 This Rocky build process applies to all RHEL-based components — Offloader, Balancer,
+                            Gateway. All follow: Build on Rocky VM → Transfer via SCP → Upload from local system.</p>
+                    </div>
+
+                    <h2 id="sync">4. Sync</h2>
+                    <div class="component-badge">📁 /git/aux/platform-aux-sync/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-aux-sync/
+./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → Sync → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                    <h2 id="collector">5. Collector</h2>
+                    <div class="component-badge">📁 /git/aux/platform-aux-collector/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-aux-collector/
+./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → Collector → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                    <h2 id="log-agent">6. Log Agent (L-Agent)</h2>
+                    <div class="component-badge">📁 /git/aux/platform-aux-lagent/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-aux-lagent/
+./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → log-agent → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                    <h2 id="metric-agent">7. Metric Agent (M-Agent)</h2>
+                    <div class="component-badge">📁 /git/aux/platform-aux-magent/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-aux-magent/
+./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → metric-agent → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                    <h2 id="node-metrics">8. Node Metrics</h2>
+                    <div class="component-badge">📁 /git/aux/platform-aux-node-metrics/</div>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /git/aux/platform-aux-node-metrics/
+./build.sh -p &lt;latest_version&gt;
+sha512sum &lt;generated_tar_file&gt;</code></pre>
+                    </div>
+                    <p>Go to <strong>License Manager → Component → Binary → node metrics → Add Version</strong>, add
+                        Description, SHA512 hash, upload tar file, click <strong>Confirm</strong>.</p>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="../index.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">Dashboard</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="haltdos-installer.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Haltdos Installer</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · ADC Build & Release</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+            ];
+
+            // Theme
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('hd-theme', next);
+                updateThemeUI(next);
+            });
+
+            // Progress bar
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                bar.style.width = p + '%';
+            });
+
+            // TOC
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item';
+                a.href = '#' + h.id;
+                a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                        const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                        if (a) a.classList.add('active');
+                    }
+                });
+            }, { rootMargin: '-10% 0px -80% 0px' });
+            document.querySelectorAll('.doc-content h2').forEach(h => observer.observe(h));
+
+            // Copy button
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied');
+                    btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+
+            // Search
+            const overlay = document.getElementById('searchOverlay');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
 
 </body>
 
