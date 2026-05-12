@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haltdos Docs</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════════════
+       SPOTLIGHT SEARCH MODAL
+  ══════════════════════════════════════ -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <a href="index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+
+        <!-- Search trigger -->
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+
+        <!-- Nav -->
+        <nav class="sidebar-nav">
+
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item active" href="index.html">
+                    <span class="nav-item-icon">🏠</span>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="docs/binary-components-upload.html">
+                    <span class="nav-item-icon">⚙️</span>
+                    Binary Components Upload
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="docs/haltdos-installer.html">
+                    <span class="nav-item-icon">🛠️</span>
+                    Haltdos Installer
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="docs/installer-methods.html">
+                    <span class="nav-item-icon">📦</span>
+                    Installation Methods
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="docs/email-integration.html">
+                    <span class="nav-item-icon">📧</span>
+                    Email Integration
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="docs/tacacs-chap-login.html">
+                    <span class="nav-item-icon">🔐</span>
+                    TACACS CHAP Login
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="docs/vercel-waf-onboarding.html">
+                    <span class="nav-item-icon">🛡️</span>
+                    Vercel WAF Onboarding
+                    <span class="nav-item-tag progress">In Progress</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">General</div>
+                <a class="nav-item" href="docs/getting-started.html">
+                    <span class="nav-item-icon">🚀</span>
+                    Getting Started
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+        </nav>
+
+        <!-- Footer — Theme Toggle -->
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- ══════════════════════════════════════
+       MAIN WRAPPER
+  ══════════════════════════════════════ -->
+    <div class="main-wrapper">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <span class="current">Dashboard</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <!-- Hero -->
+        <section class="dashboard-hero animate-in">
+            <div class="dashboard-greeting" id="greeting">
+                Good morning, <span>welcome back.</span>
+            </div>
+            <div class="dashboard-subtitle">
+                Your Haltdos documentation hub — everything in one place.
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Total Docs</div>
+                    <div class="stat-value" id="statTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value green" id="statDone">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">In Progress</div>
+                    <div class="stat-value amber" id="statProgress">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Drafts</div>
+                    <div class="stat-value stone" id="statDraft">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <div class="filters-row">
+            <span class="filters-label">Filter:</span>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="done">Done</button>
+            <button class="filter-btn" data-filter="in-progress">In Progress</button>
+            <button class="filter-btn" data-filter="draft">Draft</button>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid" id="cardsGrid">
+
+            <!-- Card: Getting Started -->
+            <a class="card" href="docs/getting-started.html" data-status="done" data-title="Getting Started"
+                data-desc="Introduction and setup guide for the project">
+                <div class="card-top">
+                    <div class="card-icon">🚀</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>Getting Started</h3>
+                <p>Introduction and setup guide. Covers installation, configuration, and first steps.</p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: Binary Components -->
+            <a class="card" href="docs/binary-components-upload.html" data-status="done"
+                data-title="Binary Components Upload" data-desc="ADC build and release guide for all components">
+                <div class="card-top">
+                    <div class="card-icon">⚙️</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>Binary Components Upload Steps</h3>
+                <p>ADC build and release guide — CLI, Controller, Offloader, Sync, Collector, Agents, and Node Metrics.
+                </p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: Haltdos Installer -->
+            <a class="card" href="docs/haltdos-installer.html" data-status="done" data-title="Haltdos Installer"
+                data-desc="Build the haltdos-installer binary from source">
+                <div class="card-top">
+                    <div class="card-icon">🛠️</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>Obtaining the Haltdos Installer</h3>
+                <p>How to build the haltdos-installer binary from source using the platform-exp-aux-setup repository.
+                </p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: Installation Methods -->
+            <a class="card" href="docs/installer-methods.html" data-status="done"
+                data-title="Haltdos Installation Methods" data-desc="Three ways to install Haltdos on Rocky Linux">
+                <div class="card-top">
+                    <div class="card-icon">📦</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>Haltdos Installation Methods</h3>
+                <p>Three ways to install — wget download, Go installer, and Java standalone — with full flag reference.
+                </p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: Email Integration -->
+            <a class="card" href="docs/email-integration.html" data-status="done" data-title="Email Integration"
+                data-desc="Haltdos SMTP email configuration">
+                <div class="card-top">
+                    <div class="card-icon">📧</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>E-Mail Integration</h3>
+                <p>Haltdos SMTP email configuration — server setup, authentication, encryption, and protocol settings.
+                </p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: TACACS -->
+            <a class="card" href="docs/tacacs-chap-login.html" data-status="done" data-title="TACACS CHAP Login Guide"
+                data-desc="TACACS user setup and CHAP authentication">
+                <div class="card-top">
+                    <div class="card-icon">🔐</div>
+                    <span class="tag done">Done</span>
+                </div>
+                <h3>TACACS CHAP Login Guide</h3>
+                <p>Step-by-step guide to creating a TACACS user, configuring the server, and logging in via CHAP
+                    authentication.</p>
+                <div class="card-footer">
+                    <span>April 2025</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Card: Vercel WAF -->
+            <a class="card" href="docs/vercel-waf-onboarding.html" data-status="in-progress"
+                data-title="Vercel App on Haltdos WAF" data-desc="Onboard Vercel app onto Haltdos Enterprise WAF">
+                <div class="card-top">
+                    <div class="card-icon">🛡️</div>
+                    <span class="tag in-progress">In Progress</span>
+                </div>
+                <h3>Vercel App on Haltdos WAF</h3>
+                <p>Complete guide to onboarding a Vercel-hosted app onto Haltdos Enterprise WAF — listener, SSL, and
+                    DNS.</p>
+                <div class="card-footer">
+                    <span>May 2026</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Empty state -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-state-icon">🔍</div>
+                No docs found matching your search.
+            </div>
+
+        </div>
+        <!-- end cards-grid -->
+
+    </div>
+    <!-- end main-wrapper -->
+
+    <!-- ══════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════ -->
+    <script>
+        (() => {
+
+            // ── Docs registry (used by search) ──
+            const DOCS = [
+                { title: 'Getting Started', icon: '🚀', status: 'done', desc: 'Introduction and setup guide for the project', href: 'docs/getting-started.html' },
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'docs/binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'docs/haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'docs/installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'docs/email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'docs/tacacs-chap-login.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'docs/vercel-waf-onboarding.html' },
+            ];
+
+            // ── Greeting based on time ──
+            const hour = new Date().getHours();
+            const greet = hour < 12 ? 'Good morning,' : hour < 18 ? 'Good afternoon,' : 'Good evening,';
+            document.getElementById('greeting').innerHTML = `${greet} <span>welcome back.</span>`;
+
+            // ── Animate stats counters ──
+            function animateCount(el, target, delay = 0) {
+                setTimeout(() => {
+                    let current = 0;
+                    const step = Math.ceil(target / 20);
+                    const timer = setInterval(() => {
+                        current = Math.min(current + step, target);
+                        el.textContent = current;
+                        if (current >= target) clearInterval(timer);
+                    }, 40);
+                }, delay);
+            }
+
+            const done = DOCS.filter(d => d.status === 'done').length;
+            const progress = DOCS.filter(d => d.status === 'in-progress').length;
+            const draft = DOCS.filter(d => d.status === 'draft').length;
+
+            animateCount(document.getElementById('statTotal'), DOCS.length, 300);
+            animateCount(document.getElementById('statDone'), done, 400);
+            animateCount(document.getElementById('statProgress'), progress, 500);
+            animateCount(document.getElementById('statDraft'), draft, 600);
+
+            // ── Filter buttons ──
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('.card');
+            const emptyState = document.getElementById('emptyState');
+            let activeFilter = 'all';
+            let searchQuery = '';
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeFilter = btn.dataset.filter;
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                let visible = 0;
+                cards.forEach(card => {
+                    const titleMatch = card.dataset.title.toLowerCase().includes(searchQuery);
+                    const descMatch = card.dataset.desc.toLowerCase().includes(searchQuery);
+                    const filterMatch = activeFilter === 'all' || card.dataset.status === activeFilter;
+                    if ((titleMatch || descMatch) && filterMatch) {
+                        card.style.display = 'flex';
+                        visible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                emptyState.style.display = visible === 0 ? 'block' : 'none';
+            }
+
+            // ── Spotlight Search ──
+            const overlay = document.getElementById('searchOverlay');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+
+            function openSearch() {
+                overlay.classList.add('open');
+                searchInput.focus();
+                renderResults('');
+            }
+
+            function closeSearch() {
+                overlay.classList.remove('open');
+                searchInput.value = '';
+                selectedIdx = -1;
+            }
+
+            function renderResults(query) {
+                const q = query.toLowerCase().trim();
+                const filtered = q === ''
+                    ? DOCS
+                    : DOCS.filter(d =>
+                        d.title.toLowerCase().includes(q) ||
+                        d.desc.toLowerCase().includes(q)
+                    );
+
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${query}</strong>"</div>`;
+                    return;
+                }
+
+                searchResults.innerHTML = filtered.map((doc, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}"
+           href="${doc.href}">
+          <div class="search-result-icon">${doc.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${doc.title}</div>
+            <div class="search-result-desc">${doc.desc}</div>
+          </div>
+          <span class="search-result-tag ${doc.status === 'done' ? 'done' : doc.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${doc.status === 'in-progress' ? 'In Progress' : doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+          </span>
+        </a>
+      `).join('');
+            }
+
+            searchInput.addEventListener('input', e => {
+                searchQuery = e.target.value.toLowerCase().trim();
+                selectedIdx = -1;
+                renderResults(e.target.value);
+                applyFilters();
+            });
+
+            // keyboard navigation inside modal
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
+                    items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
+                    items[selectedIdx]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIdx = Math.max(selectedIdx - 1, 0);
+                    items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
+                    items[selectedIdx]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter' && selectedIdx >= 0) {
+                    items[selectedIdx]?.click();
+                } else if (e.key === 'Escape') {
+                    closeSearch();
+                }
+            });
+
+            // open triggers
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+
+            // ⌘K / Ctrl+K global shortcut
+            document.addEventListener('keydown', e => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    overlay.classList.contains('open') ? closeSearch() : openSearch();
+                }
+            });
+
+            // ── Dark Mode ──
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            const html = document.documentElement;
+
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('hd-theme', next);
+                updateThemeUI(next);
+            });
+
+            function updateThemeUI(theme) {
+                if (theme === 'dark') {
+                    themeIcon.textContent = '☀️';
+                    themeLabel.textContent = 'Light mode';
+                } else {
+                    themeIcon.textContent = '🌙';
+                    themeLabel.textContent = 'Dark mode';
+                }
+            }
+
+        })();
+    </script>
+
+</body>
+
+</html>

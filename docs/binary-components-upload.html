@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binary Components Upload · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 70vw;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        /* ── Section headings ── */
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 24px 0 8px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul,
+        .doc-content ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 6px;
+        }
+
+        /* ── Inline code ── */
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        /* ── Code block ── */
+        .doc-content pre {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+
+        .doc-content pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #e8e8e3;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        /* ── Callout — purple (info) ── */
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        /* ── Warning callout — amber ── */
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        /* ── Component badge ── */
+        .component-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f5f2ff;
+            border: 1px solid #d8d0f5;
+            border-radius: 10px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #6a5acd;
+            margin-bottom: 16px;
+        }
+
+        /* ── Step indicator ── */
+        .step-label {
+            display: inline-block;
+            background-color: #6a5acd;
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ── Divider ── */
+        .doc-content hr {
+            border: none;
+            border-top: 1px solid #e8e8e3;
+            margin: 40px 0;
+        }
+
+        /* ── Doc footer ── */
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Navbar ── -->
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+
+    <div class="doc-wrapper">
+
+        <!-- ── Back ── -->
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+        <!-- ── Header ── -->
+        <div class="doc-header">
+            <span class="tag done">Done</span>
+            <h1>Binary Components Upload Steps</h1>
+            <div class="doc-meta">ADC Build &amp; Release Documentation &nbsp;·&nbsp; Last updated April 2025
+                &nbsp;·&nbsp; 10 min read</div>
+        </div>
+
+        <!-- ── Content ── -->
+        <div class="doc-content">
+
+            <!-- PREREQUISITES -->
+            <h2>Prerequisites</h2>
+            <ol>
+                <li>Clone the <code>haltdos hd-tools</code> repository.</li>
+                <li>Run the required command to clone all dependent projects.</li>
+            </ol>
+
+            <!-- INITIAL SETUP -->
+            <h2>Initial Setup</h2>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate to DevOps Directory</h3>
+            <pre><code>cd /git/hd-tool-devops</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Checkout &amp; Build All Projects</h3>
+            <pre><code>./devops checkout && ./devops build</code></pre>
+            <ul>
+                <li>Switches all repositories to <code>release-candidate</code></li>
+                <li>Pulls latest code for all projects</li>
+            </ul>
+
+            <hr />
+
+            <!-- 1. CLI -->
+            <h2>1. CLI</h2>
+            <div class="component-badge">📁 /git/aux/platform-exp-aux-cli/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-exp-aux-cli/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → CLI</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → CLI → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 2. CONTROLLER -->
+            <h2>2. Controller</h2>
+            <div class="component-badge">📁 /git/api/platform-api-console/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/api/platform-api-console/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → Controller</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → Controller → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 3. OFFLOADER -->
+            <h2>3. Offloader (Two Types)</h2>
+
+            <h3>🔹 A. Ubuntu Offloader (Local Machine)</h3>
+            <p>Built on local Ubuntu systems.</p>
+            <div class="component-badge">📁 /git/api/platform-api-console/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/api/platform-api-console/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → Offloader</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <h3>🔹 B. Rocky (RHEL) Offloader — <code>offloader-rhel</code></h3>
+            <div class="callout warning">
+                <p>⚠️ <strong>Important:</strong> Built ONLY on Rocky Linux VM (Office VMs). Do NOT build this on your
+                    local Ubuntu machine.</p>
+            </div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Login to Rocky VM</h3>
+            <p>SSH into the designated Rocky Linux office VM before proceeding.</p>
+
+            <span class="step-label">Step 2</span>
+            <h3>Clone Repository</h3>
+            <pre><code>git clone &lt;offloader-repo-url&gt;
+cd &lt;repo-folder&gt;</code></pre>
+
+            <span class="step-label">Step 3</span>
+            <h3>Switch Branch &amp; Update</h3>
+            <pre><code>git checkout release-candidate
+git pull</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Transfer Build to Local Machine</h3>
+            <pre><code>scp &lt;generated_tar_file&gt; &lt;local_user&gt;@&lt;local_ip&gt;:&lt;destination_path&gt;</code></pre>
+
+            <span class="step-label">Step 6</span>
+            <h3>Generate Hash (on local machine)</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 7</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → Offloader → Add Version</strong></p>
+
+            <div class="callout">
+                <p>💡 <strong>Note:</strong> This Rocky build process applies to all RHEL-based components — Offloader,
+                    Balancer, Gateway, and any similar builds. All follow the same pattern: build on Rocky VM → transfer
+                    via SCP → upload from local system.</p>
+            </div>
+
+            <hr />
+
+            <!-- 4. SYNC -->
+            <h2>4. Sync</h2>
+            <div class="component-badge">📁 /git/aux/platform-aux-sync/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-aux-sync/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → Sync</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → Sync → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 5. COLLECTOR -->
+            <h2>5. Collector</h2>
+            <div class="component-badge">📁 /git/aux/platform-aux-collector/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-aux-collector/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → Collector</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → Collector → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 6. LOG AGENT -->
+            <h2>6. Log Agent (L-Agent)</h2>
+            <div class="component-badge">📁 /git/aux/platform-aux-lagent/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-aux-lagent/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → log-agent</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → log-agent → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 7. METRIC AGENT -->
+            <h2>7. Metric Agent (M-Agent)</h2>
+            <div class="component-badge">📁 /git/aux/platform-aux-magent/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-aux-magent/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → metric-agent</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → metric-agent → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+            <hr />
+
+            <!-- 8. NODE METRICS -->
+            <h2>8. Node Metrics</h2>
+            <div class="component-badge">📁 /git/aux/platform-aux-node-metrics/</div>
+
+            <span class="step-label">Step 1</span>
+            <h3>Navigate</h3>
+            <pre><code>cd /git/aux/platform-aux-node-metrics/</code></pre>
+
+            <span class="step-label">Step 2</span>
+            <h3>Check Latest Version</h3>
+            <p>Go to <strong>License Manager → Binary → node metrics</strong></p>
+
+            <span class="step-label">Step 3</span>
+            <h3>Build</h3>
+            <pre><code>./build.sh -p &lt;latest_version&gt;</code></pre>
+
+            <span class="step-label">Step 4</span>
+            <h3>Generate Hash</h3>
+            <pre><code>sha512sum &lt;generated_tar_file&gt;</code></pre>
+
+            <span class="step-label">Step 5</span>
+            <h3>Upload</h3>
+            <p>Go to <strong>License Manager → Component → Binary → node metrics → Add Version</strong></p>
+            <ul>
+                <li>Description</li>
+                <li>SHA512 hash</li>
+                <li>Upload tar file</li>
+                <li>Click <strong>Confirm</strong></li>
+            </ul>
+
+        </div>
+        <!-- ── End Content ── -->
+
+        <div class="doc-footer">
+            MyDocs · ADC Build &amp; Release Documentation
+        </div>
+
+    </div>
+
+</body>
+
+</html>

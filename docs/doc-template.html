@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Title · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <!-- ── Reading Progress Bar ── -->
+    <div id="progress-bar"></div>
+
+    <!-- ══════════════════════════════════════
+       SPOTLIGHT SEARCH MODAL
+  ══════════════════════════════════════ -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html">
+                    <span class="nav-item-icon">🏠</span>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html">
+                    <span class="nav-item-icon">⚙️</span>
+                    Binary Components Upload
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="haltdos-installer.html">
+                    <span class="nav-item-icon">🛠️</span>
+                    Haltdos Installer
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="installer-methods.html">
+                    <span class="nav-item-icon">📦</span>
+                    Installation Methods
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html">
+                    <span class="nav-item-icon">📧</span>
+                    Email Integration
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+                <a class="nav-item" href="tacacs-chap-login.html">
+                    <span class="nav-item-icon">🔐</span>
+                    TACACS CHAP Login
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html">
+                    <span class="nav-item-icon">🛡️</span>
+                    Vercel WAF Onboarding
+                    <span class="nav-item-tag progress">In Progress</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">General</div>
+                <a class="nav-item" href="getting-started.html">
+                    <span class="nav-item-icon">🚀</span>
+                    Getting Started
+                    <span class="nav-item-tag done">Done</span>
+                </a>
+            </div>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- ══════════════════════════════════════
+       MAIN WRAPPER
+  ══════════════════════════════════════ -->
+    <div class="main-wrapper">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <!-- UPDATE THIS per page: -->
+                <span class="sep">Build & Release</span>
+                <span class="sep">›</span>
+                <span class="current">Document Title</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <!-- Doc Layout -->
+        <div class="doc-layout">
+
+            <!-- ── Doc Content ── -->
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <!-- Doc Header — UPDATE PER PAGE -->
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>Document Title Goes Here</h1>
+                    <div class="doc-meta">
+                        Haltdos · Category &nbsp;·&nbsp; Last updated April 2025 &nbsp;·&nbsp; 5 min read
+                    </div>
+                </div>
+
+                <!-- ══════════════════════════════
+             DOC CONTENT STARTS HERE
+             All your h2, h3, p, pre,
+             callouts, tables, step-cards
+             go inside .doc-content
+        ══════════════════════════════ -->
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        Introduction paragraph goes here. Explain what this document covers
+                        and who it's for.
+                    </p>
+
+                    <!-- SECTION EXAMPLE -->
+                    <h2 id="section-prerequisites">Prerequisites</h2>
+                    <p>Before you begin, make sure you have:</p>
+                    <ul>
+                        <li>Item one</li>
+                        <li>Item two</li>
+                        <li>Item three</li>
+                    </ul>
+
+                    <!-- CODE BLOCK EXAMPLE — wrap every pre in .code-block-wrap -->
+                    <h2 id="section-commands">Commands</h2>
+                    <p>Run the following command:</p>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <span>Copy</span>
+                        </button>
+                        <pre><code>your command goes here</code></pre>
+                    </div>
+
+                    <!-- CALLOUT EXAMPLES -->
+                    <div class="callout info">
+                        <p>💡 <strong>Tip:</strong> Use .callout.info for tips and notes.</p>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Warning:</strong> Use .callout.warning for important cautions.</p>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ <strong>Success:</strong> Use .callout.success for confirmations.</p>
+                    </div>
+
+                    <div class="callout danger">
+                        <p>🚨 <strong>Critical:</strong> Use .callout.danger for critical warnings.</p>
+                    </div>
+
+                    <!-- SECTION EXAMPLE 2 -->
+                    <h2 id="section-steps">Steps</h2>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h3>Step title goes here</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Step description goes here.</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">
+                                    <span>Copy</span>
+                                </button>
+                                <pre><code>command for this step</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h3>Second step title</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Second step description goes here.</p>
+                        </div>
+                    </div>
+
+                    <!-- SECTION EXAMPLE 3 -->
+                    <h2 id="section-reference">Reference</h2>
+                    <p>Configuration reference table:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Field Name</strong></td>
+                                <td><code>value</code></td>
+                                <td>What this field does</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Toggle Field</strong></td>
+                                <td><span class="toggle-on">Enabled</span></td>
+                                <td>A toggle field example</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr />
+
+                    <!-- TERMINAL EXAMPLE -->
+                    <h2 id="section-terminal">Terminal</h2>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — user@server</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line">
+                                <span class="t-prompt">user@server:~$</span>
+                                <span class="t-cmd"> your command here</span>
+                            </span>
+                            <span class="t-output">output line here</span>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- end .doc-content -->
+
+                <!-- ── Prev / Next Navigation ── -->
+                <!-- UPDATE hrefs and titles per page -->
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="#">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">Previous Doc Title</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="#">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Next Doc Title</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">
+                    Haltdos Docs · Built with care
+                </div>
+
+            </main>
+
+            <!-- ── On This Page TOC ── -->
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+                <!-- Auto-generated by JS — no need to write this manually -->
+            </aside>
+
+        </div>
+        <!-- end doc-layout -->
+
+    </div>
+    <!-- end main-wrapper -->
+
+    <!-- ══════════════════════════════════════
+       JAVASCRIPT — runs on every doc page
+  ══════════════════════════════════════ -->
+    <script>
+        (() => {
+
+            // ── Docs registry (same as index) ──
+            const DOCS = [
+                { title: 'Getting Started', icon: '🚀', status: 'done', desc: 'Introduction and setup guide for the project', href: '../docs/getting-started.html' },
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+            ];
+
+            // ── Theme persistence ──
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('hd-theme', next);
+                updateThemeUI(next);
+            });
+
+            function updateThemeUI(theme) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+                themeLabel.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
+            }
+
+            // ── Reading progress bar ──
+            const progressBar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = progress + '%';
+            });
+
+            // ── Auto-generate TOC from h2 headings ──
+            const toc = document.getElementById('docToc');
+            const headings = document.querySelectorAll('.doc-content h2');
+
+            if (headings.length > 0) {
+                headings.forEach((h, i) => {
+                    // auto-assign id if missing
+                    if (!h.id) h.id = 'section-' + i;
+
+                    const link = document.createElement('a');
+                    link.className = 'toc-item';
+                    link.href = '#' + h.id;
+                    link.textContent = h.textContent;
+                    toc.appendChild(link);
+                });
+            } else {
+                toc.style.display = 'none';
+            }
+
+            // ── TOC active highlight on scroll ──
+            const tocLinks = toc.querySelectorAll('.toc-item');
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        tocLinks.forEach(l => l.classList.remove('active'));
+                        const active = toc.querySelector(`a[href="#${entry.target.id}"]`);
+                        if (active) active.classList.add('active');
+                    }
+                });
+            }, {
+                rootMargin: '-10% 0px -80% 0px',
+                threshold: 0
+            });
+
+            headings.forEach(h => observer.observe(h));
+
+            // ── Sidebar active link ──
+            const currentPath = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-item').forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+
+            // ── Copy button ──
+            window.copyCode = function (btn) {
+                const pre = btn.nextElementSibling;
+                const text = pre.textContent.trim();
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.classList.add('copied');
+                    btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.querySelector('span').textContent = 'Copy';
+                    }, 2000);
+                });
+            };
+
+            // ── Spotlight Search ──
+            const overlay = document.getElementById('searchOverlay');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+
+            function openSearch() {
+                overlay.classList.add('open');
+                searchInput.focus();
+                renderResults('');
+            }
+
+            function closeSearch() {
+                overlay.classList.remove('open');
+                searchInput.value = '';
+                selectedIdx = -1;
+            }
+
+            function renderResults(query) {
+                const q = query.toLowerCase().trim();
+                const filtered = q === ''
+                    ? DOCS
+                    : DOCS.filter(d =>
+                        d.title.toLowerCase().includes(q) ||
+                        d.desc.toLowerCase().includes(q)
+                    );
+
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${query}</strong>"</div>`;
+                    return;
+                }
+
+                searchResults.innerHTML = filtered.map((doc, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}"
+           href="${doc.href}">
+          <div class="search-result-icon">${doc.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${doc.title}</div>
+            <div class="search-result-desc">${doc.desc}</div>
+          </div>
+          <span class="search-result-tag ${doc.status === 'done' ? 'done' : doc.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${doc.status === 'in-progress' ? 'In Progress' : doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+          </span>
+        </a>
+      `).join('');
+            }
+
+            searchInput.addEventListener('input', e => {
+                selectedIdx = -1;
+                renderResults(e.target.value);
+            });
+
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
+                    items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
+                    items[selectedIdx]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIdx = Math.max(selectedIdx - 1, 0);
+                    items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx));
+                    items[selectedIdx]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter' && selectedIdx >= 0) {
+                    items[selectedIdx]?.click();
+                } else if (e.key === 'Escape') {
+                    closeSearch();
+                }
+            });
+
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+
+            document.addEventListener('keydown', e => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    overlay.classList.contains('open') ? closeSearch() : openSearch();
+                }
+            });
+
+        })();
+    </script>
+
+</body>
+
+</html>

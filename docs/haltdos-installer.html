@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haltdos Installer · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 75vw;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        .callout.success {
+            background-color: #f0faf0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .callout.success p {
+            color: #2e7d32;
+        }
+
+        .doc-content hr {
+            border: none;
+            border-top: 1px solid #e8e8e3;
+            margin: 36px 0;
+        }
+
+        /* ── Nav path ── */
+        .nav-path {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f5f5f0;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .nav-path span {
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+
+        /* ── Step card ── */
+        .step-card {
+            background-color: #ffffff;
+            border: 1px solid #e8e8e3;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .step-number {
+            min-width: 40px;
+            height: 40px;
+            background-color: #6a5acd;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .step-body p {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .step-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-body ul {
+            padding-left: 20px;
+            margin: 10px 0 14px;
+        }
+
+        .step-body li {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .step-body code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        /* ── Terminal block ── */
+        .terminal {
+            background-color: #0f0f0f;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 14px 0 18px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .terminal-bar {
+            background-color: #1e1e1e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background-color: #ff5f57;
+        }
+
+        .terminal-dot.amber {
+            background-color: #febc2e;
+        }
+
+        .terminal-dot.green {
+            background-color: #28c840;
+        }
+
+        .terminal-title {
+            font-size: 0.78rem;
+            color: #666;
+            margin-left: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-body {
+            padding: 18px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.75;
+            overflow-x: auto;
+        }
+
+        .t-prompt {
+            color: #7ec8a4;
+            /* green for prompt */
+        }
+
+        .t-cmd {
+            color: #e8e8e3;
+            /* white for command */
+        }
+
+        .t-output {
+            color: #888;
+            /* grey for output */
+            display: block;
+        }
+
+        .t-highlight {
+            color: #febc2e;
+            /* amber for important output */
+        }
+
+        .t-line {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* ── File tree ── */
+        .file-tree {
+            background-color: #f8f8f6;
+            border: 1px solid #e8e8e3;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 14px 0 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .file-tree .dir {
+            color: #6a5acd;
+            font-weight: 600;
+        }
+
+        .file-tree .file {
+            color: #444;
+        }
+
+        .file-tree .exec {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .file-tree .note {
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        /* ── Output size badge ── */
+        .size-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #e6f4ea;
+            border: 1px solid #c8e6c9;
+            color: #2e7d32;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin: 6px 0 14px;
+        }
+
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+
+    <div class="doc-wrapper">
+
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+        <div class="doc-header">
+            <span class="tag done">Done</span>
+            <h1>Obtaining the Haltdos Installer</h1>
+            <div class="doc-meta">Haltdos · Build &amp; Release &nbsp;·&nbsp; Last updated April 2025 &nbsp;·&nbsp; 5
+                min read</div>
+        </div>
+
+        <div class="doc-content">
+
+            <p>
+                This guide documents how to build the <code>haltdos-installer</code> binary
+                from source using the <code>platform-exp-aux-setup</code> repository.
+                The installer is located inside the <code>experimental</code> project group
+                and is built using a simple shell script.
+            </p>
+
+            <div class="nav-path">
+                🗂 ~/git <span>›</span> experimental <span>›</span> platform-exp-aux-setup
+            </div>
+
+            <h2>Prerequisites</h2>
+            <p>Before you begin, make sure the following are in place:</p>
+            <ul>
+                <li>The <code>haltdos hd-tools</code> repository is cloned and all dependent projects are available
+                    under <code>~/git/</code></li>
+                <li>You have run the initial devops checkout and build (see the <strong>Binary Components
+                        Upload</strong> doc)</li>
+                <li>Go is installed on your machine (required to compile the installer binary)</li>
+                <li>You have execute permissions on <code>build.sh</code></li>
+            </ul>
+
+            <h2>Repository Location</h2>
+            <p>
+                The installer lives inside the <code>experimental</code> project group,
+                not the main <code>api</code> or <code>aux</code> groups. Here is the
+                full layout of the <code>~/git/</code> directory for reference:
+            </p>
+
+            <div class="file-tree">
+                <span class="t-line"><span class="dir">~/git/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">api/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">apps/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">aux/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">common/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">community/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">experimental/</span> &nbsp;<span class="note">←
+                        you are going here</span></span>
+                <span class="t-line">&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span
+                        class="dir">platform-exp-aux-cli/</span></span>
+                <span class="t-line">&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">platform-exp-aux-setup/</span>
+                    &nbsp;<span class="note">← installer lives here</span></span>
+                <span class="t-line">&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span
+                        class="dir">platform-exp-gui-admin/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">gui/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">hd-tool-devops/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">manager/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">pro/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">rules/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">ticket/</span></span>
+                <span class="t-line">&nbsp;&nbsp;├── <span class="dir">tools/</span></span>
+                <span class="t-line">&nbsp;&nbsp;└── <span class="dir">wiki/</span></span>
+            </div>
+
+            <h2>Step-by-Step Guide</h2>
+
+            <!-- STEP 1 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>Navigate to the git directory</h3>
+                </div>
+                <div class="step-body">
+                    <p>Start from your home directory and move into the <code>git/</code> folder where all Haltdos
+                        repositories are cloned.</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-prompt">haltdos@haltdos-Kartik:~$</span> <span
+                                    class="t-cmd">cd git</span></span>
+                            <span class="t-line"><span class="t-prompt">haltdos@haltdos-Kartik:~/git$</span> <span
+                                    class="t-cmd">ls</span></span>
+                            <span class="t-output">api&nbsp;&nbsp; aux&nbsp;&nbsp;&nbsp;&nbsp;
+                                community&nbsp;&nbsp;&nbsp;&nbsp;
+                                gui&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                manager&nbsp;&nbsp;rules&nbsp;&nbsp;&nbsp;tools</span>
+                            <span
+                                class="t-output">apps&nbsp;&nbsp;common&nbsp;&nbsp;experimental&nbsp;&nbsp;hd-tool-devops&nbsp;&nbsp;pro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ticket&nbsp;&nbsp;wiki</span>
+                        </div>
+                    </div>
+                    <p>You should see the <code>experimental/</code> directory listed alongside all the other project
+                        groups.</p>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3>Navigate into the experimental directory</h3>
+                </div>
+                <div class="step-body">
+                    <p>Change into the <code>experimental/</code> directory and verify the repositories inside it.</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-prompt">haltdos@haltdos-Kartik:~/git$</span> <span
+                                    class="t-cmd">cd experimental/</span></span>
+                            <span class="t-line"><span
+                                    class="t-prompt">haltdos@haltdos-Kartik:~/git/experimental$</span> <span
+                                    class="t-cmd">ls</span></span>
+                            <span
+                                class="t-output">platform-exp-aux-cli&nbsp;&nbsp;platform-exp-aux-setup&nbsp;&nbsp;platform-exp-gui-admin</span>
+                        </div>
+                    </div>
+                    <p>You will see three repositories. The one you need is <code>platform-exp-aux-setup</code>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h3>Navigate into the setup repository</h3>
+                </div>
+                <div class="step-body">
+                    <p>Change into <code>platform-exp-aux-setup/</code> and check its contents before building.</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span
+                                    class="t-prompt">haltdos@haltdos-Kartik:~/git/experimental$</span> <span
+                                    class="t-cmd">cd platform-exp-aux-setup/</span></span>
+                            <span class="t-line"><span
+                                    class="t-prompt">haltdos@haltdos-Kartik:~/git/experimental/platform-exp-aux-setup$</span>
+                                <span class="t-cmd">ls</span></span>
+                            <span
+                                class="t-output">build.sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;go.mod&nbsp;&nbsp;haltdos-installer&nbsp;&nbsp;scripts</span>
+                            <span
+                                class="t-output">dependency.json&nbsp;&nbsp;go.sum&nbsp;&nbsp;README.md&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;src</span>
+                        </div>
+                    </div>
+
+                    <p>Here is what each file and folder is:</p>
+
+                    <div class="file-tree">
+                        <span class="t-line"><span class="dir">platform-exp-aux-setup/</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="exec">build.sh</span> <span class="note">← the
+                                build script you will run</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="file">go.mod</span> <span class="note">← Go
+                                module definition</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="file">go.sum</span> <span class="note">← Go
+                                dependency checksums</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="file">dependency.json</span> <span
+                                class="note">← component dependency manifest</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="file">README.md</span> <span class="note">←
+                                basic project readme</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="exec">haltdos-installer</span> <span
+                                class="note">← the compiled binary (generated after build)</span></span>
+                        <span class="t-line">&nbsp;&nbsp;├── <span class="dir">scripts/</span> <span class="note">←
+                                supporting shell scripts</span></span>
+                        <span class="t-line">&nbsp;&nbsp;└── <span class="dir">src/</span> <span class="note">← Go
+                                source code</span></span>
+                    </div>
+
+                    <div class="callout">
+                        <p>💡 The <code>haltdos-installer</code> binary may already exist from a previous build. Always
+                            run <code>build.sh</code> fresh to get the latest compiled version.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h3>Run the build script</h3>
+                </div>
+                <div class="step-body">
+                    <p>Execute <code>build.sh</code> to compile the installer binary. This will download any Go
+                        dependencies and produce the final <code>haltdos-installer</code> executable.</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span
+                                    class="t-prompt">haltdos@haltdos-Kartik:~/git/experimental/platform-exp-aux-setup$</span>
+                                <span class="t-cmd">./build.sh</span></span>
+                        </div>
+                    </div>
+                    <div class="callout warning">
+                        <p>⚠️ The build script produces no output on success — a blank return to the prompt means the
+                            build completed successfully. If you see errors, check that Go is installed and your network
+                            can reach the Go module proxy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h3>Verify the installer binary was created</h3>
+                </div>
+                <div class="step-body">
+                    <p>Run <code>ls -ltrh</code> to confirm the binary was generated and check its size and timestamp. A
+                        freshly built installer should be around <strong>16 MB</strong>.</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span
+                                    class="t-prompt">haltdos@haltdos-Kartik:~/git/experimental/platform-exp-aux-setup$</span>
+                                <span class="t-cmd">ls -ltrh</span></span>
+                            <span class="t-output">total 16M</span>
+                            <span class="t-output">-rw-rw-r-- 1 haltdos haltdos 11 Feb 4 17:20 README.md</span>
+                            <span class="t-output">-rwxrwxr-x 1 haltdos haltdos 530 Feb 4 17:20 build.sh</span>
+                            <span class="t-output">drwxrwxr-x 14 haltdos haltdos 4.0K Feb 4 17:40 src</span>
+                            <span class="t-output">-rw-rw-r-- 1 haltdos haltdos 11K Apr 15 15:50 go.sum</span>
+                            <span class="t-output">-rw-rw-r-- 1 haltdos haltdos 1.4K Apr 15 15:50 go.mod</span>
+                            <span class="t-output">-rw-rw-r-- 1 haltdos haltdos 25K Apr 15 15:50 dependency.json</span>
+                            <span class="t-output">drwxrwxr-x 2 haltdos haltdos 4.0K Apr 15 15:50 scripts</span>
+                            <span class="t-line">-rwxrwxr-x 1 haltdos haltdos <span class="t-highlight">16M Apr 29 11:06
+                                    haltdos-installer</span></span>
+                        </div>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ <strong>Success!</strong> The <code>haltdos-installer</code> binary is present, is
+                            <strong>16M</strong> in size, has execute permissions (<code>-rwxrwxr-x</code>), and its
+                            timestamp matches today's build time. Your installer is ready to use.
+                        </p>
+                    </div>
+
+                    <p>Key things to verify in the output:</p>
+                    <ul>
+                        <li>The file is listed as <code>haltdos-installer</code> at the bottom (most recently modified)
+                        </li>
+                        <li>Permissions begin with <code>-rwxrwxr-x</code> — the <code>x</code> confirms it is
+                            executable</li>
+                        <li>Size shows <code>16M</code> — a significantly smaller file may indicate an incomplete build
+                        </li>
+                        <li>The timestamp matches when you ran <code>./build.sh</code></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="doc-footer">
+            MyDocs · Haltdos Installer Build Guide
+        </div>
+
+    </div>
+
+</body>
+
+</html>

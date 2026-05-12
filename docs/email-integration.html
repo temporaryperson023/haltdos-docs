@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Integration · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 70vw;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 24px 0 8px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 6px;
+        }
+
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .doc-content pre {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+
+        .doc-content pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #e8e8e3;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        .doc-content hr {
+            border: none;
+            border-top: 1px solid #e8e8e3;
+            margin: 36px 0;
+        }
+
+        /* ── Config Table ── */
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+        }
+
+        .config-table thead tr {
+            background-color: #f5f5f0;
+            border-bottom: 2px solid #e0e0d8;
+        }
+
+        .config-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .config-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .config-table tr:hover td {
+            background-color: #fafaf8;
+        }
+
+        /* ── Toggle indicators ── */
+        .toggle-on {
+            display: inline-block;
+            background-color: #e6f4ea;
+            color: #2e7d32;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .toggle-off {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #757575;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        /* ── Field name style ── */
+        .field-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .field-desc {
+            font-size: 0.82rem;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* ── Nav path ── */
+        .nav-path {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f5f5f0;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .nav-path span {
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Navbar ── -->
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+
+    <div class="doc-wrapper">
+
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+        <!-- ── Header ── -->
+        <div class="doc-header">
+            <span class="tag done">Done</span>
+            <h1>E-Mail Integration</h1>
+            <div class="doc-meta">Haltdos · Integrations &nbsp;·&nbsp; Last updated April 2025 &nbsp;·&nbsp; 5 min read
+            </div>
+        </div>
+
+        <!-- ── Content ── -->
+        <div class="doc-content">
+
+            <p>
+                This page documents the Email Integration configuration under
+                <strong>System → Integrations → E-Mail</strong> in the Haltdos dashboard.
+                It covers all available fields, their purpose, and the recommended values.
+            </p>
+
+            <!-- NAV PATH -->
+            <div class="nav-path">
+                🗂 System <span>›</span> Integrations <span>›</span> E-Mail
+            </div>
+
+            <!-- BASIC SETTINGS -->
+            <h2>Basic Settings</h2>
+
+            <table class="config-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value / Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable Notifications</div>
+                        </td>
+                        <td><span class="toggle-on">Enabled</span></td>
+                        <td>Enables notification delivery via Email.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Email Server</div>
+                        </td>
+                        <td>
+                            <code>smtp.gmail.com</code>
+                            <br /><br />
+                            <code>smtp-mail.outlook.com</code>
+                        </td>
+                        <td>Hostname or IP address of the outgoing email (SMTP) server.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Server Port</div>
+                        </td>
+                        <td><code>587</code></td>
+                        <td>Port used to connect to the email server. Port 587 is standard for TLS/STARTTLS.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Connection Timeout</div>
+                        </td>
+                        <td><code>0</code> Milliseconds</td>
+                        <td>Timeout for establishing a connection. Set to <code>0</code> to disable timeout.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Socket Timeout</div>
+                        </td>
+                        <td><code>0</code> Seconds</td>
+                        <td>Timeout for socket-level communication. Set to <code>0</code> to disable timeout.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- AUTHENTICATION -->
+            <h2>Authentication</h2>
+
+            <table class="config-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value / Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable Authentication</div>
+                        </td>
+                        <td><span class="toggle-on">Enabled</span></td>
+                        <td>Enables credential-based authentication when connecting to the SMTP server.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Email Address</div>
+                        </td>
+                        <td><code>your@gmail.com</code></td>
+                        <td>The email address used for authenticating with the SMTP server.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Email Password</div>
+                        </td>
+                        <td><code>••••••••••••••</code></td>
+                        <td>Password for the above email account. Use an App Password if 2FA is enabled on Gmail.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Technical Support</div>
+                        </td>
+                        <td><span class="toggle-off">Disabled</span></td>
+                        <td>When enabled, sends critical alert notifications to Haltdos technical support.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <p>⚠️ <strong>Gmail users:</strong> If your account has 2-Factor Authentication enabled, you must
+                    generate and use an <strong>App Password</strong> instead of your regular Gmail password. Regular
+                    passwords will be rejected by Google's SMTP server.</p>
+            </div>
+
+            <!-- ENCRYPTION & PROTOCOL -->
+            <h2>Encryption &amp; Protocol Settings</h2>
+
+            <table class="config-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value / Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="field-name">Encryption Protocol</div>
+                        </td>
+                        <td><code>TLS</code></td>
+                        <td>Type of encryption used when connecting to the email server.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">DSN Response</div>
+                        </td>
+                        <td><code>None</code></td>
+                        <td>Type of Delivery Status Notification (DSN) response on delivery failure.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">DSN Notify</div>
+                        </td>
+                        <td><code>None</code></td>
+                        <td>Specifies when to send a DSN notification.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable EHLO</div>
+                        </td>
+                        <td><span class="toggle-on">Enabled</span></td>
+                        <td>Initiates the SMTP connection using the EHLO command for extended features.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Start TLS</div>
+                        </td>
+                        <td><span class="toggle-on">Enabled</span></td>
+                        <td>Upgrades the connection to SSL/TLS after initial connection. Required for port 587.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable 8-bit Mime</div>
+                        </td>
+                        <td><span class="toggle-off">Disabled</span></td>
+                        <td>Enable only for compatibility with older email servers that require 8-bit MIME encoding.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable Partial Email</div>
+                        </td>
+                        <td><span class="toggle-off">Disabled</span></td>
+                        <td>Allows sending partial emails. Leave disabled unless specifically required.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable UserSet</div>
+                        </td>
+                        <td><span class="toggle-off">Disabled</span></td>
+                        <td>Uses RSET command instead of NOOP while sending email when enabled.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="field-name">Enable Quit Wait</div>
+                        </td>
+                        <td><span class="toggle-on">Enabled</span></td>
+                        <td>Gracefully terminates the connection with the email server after sending.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+
+            <!-- ACTIONS -->
+            <h2>Actions</h2>
+            <p>Two buttons are available at the bottom of the configuration page:</p>
+            <ul>
+                <li><strong>Send Test Mail</strong> — Sends a test email using the current configuration to verify
+                    everything is working correctly before saving.</li>
+                <li><strong>Save Changes</strong> — Saves all configuration changes to the system.</li>
+            </ul>
+
+            <div class="callout">
+                <p>💡 <strong>Tip:</strong> Always click <strong>Save Changes</strong> first to save the SMTP
+                    connection before hitting Send Test Mail to check the configuration.</p>
+            </div>
+
+        </div>
+
+        <div class="doc-footer">
+            MyDocs · Haltdos Email Integration Configuration
+        </div>
+
+    </div>
+
+</body>
+
+</html>

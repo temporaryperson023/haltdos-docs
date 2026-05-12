@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TACACS CHAP Login Guide · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 70vw;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        .callout.success {
+            background-color: #f0faf0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .callout.success p {
+            color: #2e7d32;
+        }
+
+        .nav-path {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f5f5f0;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .nav-path span {
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+
+        .step-card {
+            background-color: #ffffff;
+            border: 1px solid #e8e8e3;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: box-shadow 0.2s;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .step-number {
+            min-width: 40px;
+            height: 40px;
+            background-color: #6a5acd;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .step-body p {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .step-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 18px;
+            font-size: 0.88rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e8e8e3;
+        }
+
+        .config-table thead tr {
+            background-color: #f5f5f0;
+        }
+
+        .config-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #e0e0d8;
+        }
+
+        .config-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .config-table tr:hover td {
+            background-color: #fafaf8;
+        }
+
+        .screenshot-container {
+            background-color: #f8f8f6;
+            border: 1px solid #e8e8e3;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 16px 0 20px;
+        }
+
+        .screenshot-container img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+            border: 1px solid #e0e0d8;
+        }
+
+        .screenshot-label {
+            font-size: 0.78rem;
+            color: #aaa;
+            margin-top: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .step-body pre {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 12px 0 16px;
+        }
+
+        .step-body pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #e8e8e3;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            font-family: 'Courier New', monospace;
+        }
+
+        .step-body code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .step-body ul {
+            padding-left: 20px;
+            margin: 10px 0 14px;
+        }
+
+        .step-body li {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .toggle-on {
+            display: inline-block;
+            background-color: #e6f4ea;
+            color: #2e7d32;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+    <div class="doc-wrapper">
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+        <div class="doc-header">
+            <span class="tag done">Done</span>
+            <h1>TACACS Server — CHAP Login Guide</h1>
+            <div class="doc-meta">Haltdos · Management &nbsp;·&nbsp; Last updated April 2025 &nbsp;·&nbsp; 7 min read
+            </div>
+        </div>
+        <div class="doc-content">
+            <p>This guide walks you through the complete process of setting up a TACACS user and logging into the
+                Haltdos UI using CHAP authentication — step by step, from server configuration to successful login. No
+                prior TACACS knowledge required.</p>
+            <div class="nav-path">🗂 Management <span>›</span> TACACS &nbsp;&nbsp;|&nbsp;&nbsp; 🗂 Management
+                <span>›</span> Administrators
+            </div>
+
+            <h2>Prerequisites</h2>
+            <p>Before you begin, make sure you have:</p>
+            <ul>
+                <li>Access to the Haltdos dashboard with admin privileges</li>
+                <li>SSH / terminal access to the TACACS server machine</li>
+                <li>Docker running on the TACACS server with the <code>tacplus</code> container active</li>
+            </ul>
+
+            <h2>Step-by-Step Guide</h2>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>Configure the TACACS Server in Haltdos UI</h3>
+                </div>
+                <div class="step-body">
+                    <p>Go to <strong>Management → TACACS</strong> in the Haltdos dashboard. Fill in the configuration
+                        fields below and click <strong>Save Changes</strong>.</p>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enabled</strong></td>
+                                <td><span class="toggle-on">Enabled</span></td>
+                                <td>Enable login through TACACS Server</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Endpoint</strong></td>
+                                <td><code>172.16.0.124</code></td>
+                                <td>IP address or hostname of your TACACS server</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Port</strong></td>
+                                <td><code>49</code></td>
+                                <td>Default TACACS+ port — do not change unless your server uses a custom port</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secret Key</strong></td>
+                                <td><code>tacacs123</code></td>
+                                <td>Shared secret — must match the <code>key</code> in your tac_plus.conf file exactly
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Authorization Protocol</strong></td>
+                                <td><code>CHAP</code></td>
+                                <td>Select CHAP as the authentication protocol</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Timeout</strong></td>
+                                <td><code>5000</code> ms</td>
+                                <td>How long Haltdos waits for a TACACS response before giving up</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="screenshot-container">
+                        <img src="../images/tacacs-chap-user-config-image.png"
+                            alt="TACACS Server Configuration in Haltdos UI" />
+                        <div class="screenshot-label">Figure 1 — Management › TACACS configuration screen with all
+                            required fields</div>
+                    </div>
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Important:</strong> The <strong>Secret Key</strong> set here must exactly match
+                            the <code>key</code> value at the top of your <code>tac_plus.conf</code> file on the server.
+                            A mismatch will cause all authentication to silently fail.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3>SSH into the TACACS Server &amp; Add a New User</h3>
+                </div>
+                <div class="step-body">
+                    <p>Open your terminal and SSH into the machine running the TACACS Docker container. Then open the
+                        TACACS configuration file:</p>
+                    <pre><code>vi /home/haltdos/tacplus_image/tac_plus.conf</code></pre>
+                    <p>The file contains the server's secret key at the top, followed by group and user definitions. It
+                        will look like the screenshot below — with existing example users for ASCII, PAP, and CHAP
+                        protocols:</p>
+                    <div class="screenshot-container">
+                        <img src="../images/tacacs-chap-user-terminal-image.png"
+                            alt="tac_plus.conf open in terminal showing full file" />
+                        <div class="screenshot-label">Figure 2 — tac_plus.conf open in vim, showing the key, groups, and
+                            existing user entries</div>
+                    </div>
+                    <p>Scroll to the bottom and add a new CHAP user block following this exact format. Replace
+                        <code>your_username</code> and <code>YourPassword123</code> with your desired values:
+                    </p>
+                    <div class="screenshot-container">
+
+                        <pre><code>user = your_username {
+        chap    = cleartext "YourPassword123"
+        member  = netadmin
+}</code></pre>
+                        <div class="callout">
+                            <p>💡 The value inside <code>cleartext "..."</code> is the password you will use to log in
+                                on
+                                the Haltdos UI. Write it down — you will need it in Step 6.</p>
+                        </div>
+                        <p>Save the file (<code>:wq</code> in vim), then restart the Docker container to apply the
+                            changes:
+                        </p>
+                        <pre><code>sudo docker restart tacplus</code></pre>
+                        <div class="callout warning">
+                            <p>⚠️ The container <strong>must</strong> be restarted — changes to
+                                <code>tac_plus.conf</code>
+                                are not picked up automatically while the container is running.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h3>Go to Management → Administrators</h3>
+                    </div>
+                    <div class="step-body">
+                        <p>Back in the Haltdos dashboard, navigate to <strong>Management → Administrators</strong>. This
+                            is
+                            where you register the TACACS user so the system knows to authenticate them via the TACACS
+                            server.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h3>Add the TACACS User as an Administrator</h3>
+                    </div>
+                    <div class="step-body">
+                        <p>Click <strong>Add Administrator</strong> and fill in the form exactly as shown below:</p>
+                        <div class="screenshot-container">
+                            <img src="../images/user add image tacacs.png"
+                                alt="Add Administrator form with TACACS login mode selected" />
+                            <div class="screenshot-label">Figure 4 — Add Administrator form — Login Mode must be set to
+                                TACACS</div>
+                        </div>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Name</strong></td>
+                                    <td><code>tester</code> (any display name)</td>
+                                    <td>A friendly label for this admin — can be anything you like</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Login Mode</strong></td>
+                                    <td><code>TACACS</code></td>
+                                    <td>Must be TACACS — this tells Haltdos to authenticate via the TACACS server</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Username</strong></td>
+                                    <td><code>chap_user3</code></td>
+                                    <td>⚠️ Must exactly match the username in <code>tac_plus.conf</code> —
+                                        case-sensitive
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>E-Mail</strong></td>
+                                    <td>Any valid email</td>
+                                    <td>Used for system notifications only</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>Click <strong>Save Changes</strong> to register the administrator.</p>
+                        <div class="callout warning">
+                            <p>⚠️ <strong>Critical:</strong> The <strong>Username</strong> field must be
+                                letter-for-letter
+                                identical to what you added in <code>tac_plus.conf</code> in Step 2. Any difference —
+                                including capitalization — will cause login to fail.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h3>Log Out from the Current Admin Session</h3>
+                    </div>
+                    <div class="step-body">
+                        <p>You must log out of the current session before testing the TACACS login. Click your user
+                            avatar
+                            or account menu in the top-right corner of the Haltdos dashboard and select
+                            <strong>Logout</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <h3>Log In Using the TACACS User Credentials</h3>
+                    </div>
+                    <div class="step-body">
+                        <p>On the Haltdos login screen, enter the TACACS user credentials you configured in Steps 2 and
+                            4:
+                        </p>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>What to enter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Username / Email</strong></td>
+                                    <td>The username from <code>tac_plus.conf</code> — e.g. <code>chap_user3</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Password</strong></td>
+                                    <td>The CHAP cleartext value from <code>tac_plus.conf</code> — e.g.
+                                        <code>Test#123</code>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>Click <strong>Login →</strong> to authenticate.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <h3>Successfully Logged In as TACACS User 🎉</h3>
+                    </div>
+                    <div class="step-body">
+                        <div class="callout success">
+                            <p>✅ <strong>Congratulations!</strong> You are now logged into the Haltdos dashboard as a
+                                TACACS-authenticated user. The CHAP authentication flow is working correctly end-to-end.
+                            </p>
+                        </div>
+                        <p>You will land on the <strong>Account</strong> page. The username shown in the profile panel
+                            confirms which TACACS user is logged in. You can verify it matches the username from Steps 2
+                            and
+                            4.</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="doc-footer">MyDocs · Haltdos TACACS CHAP Login Guide</div>
+        </div>
+</body>
+
+</html>

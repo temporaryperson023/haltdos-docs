@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vercel App on Haltdos WAF · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul,
+        .doc-content ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .doc-content hr {
+            border: none;
+            border-top: 1px solid #e8e8e3;
+            margin: 40px 0;
+        }
+
+        /* ── Callouts ── */
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        .callout.success {
+            background-color: #f0faf0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .callout.success p {
+            color: #2e7d32;
+        }
+
+        .callout.danger {
+            background-color: #fff5f5;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .callout.danger p {
+            color: #c53030;
+        }
+
+        /* ── Nav path ── */
+        .nav-path {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f5f5f0;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .nav-path span {
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+
+        /* ── Step card ── */
+        .step-card {
+            background-color: #ffffff;
+            border: 1px solid #e8e8e3;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .step-number {
+            min-width: 40px;
+            height: 40px;
+            background-color: #6a5acd;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 2px 0;
+        }
+
+        .step-header p {
+            font-size: 0.83rem;
+            color: #999;
+            margin: 0;
+        }
+
+        .step-body p {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .step-body ul,
+        .step-body ol {
+            padding-left: 20px;
+            margin: 8px 0 14px;
+        }
+
+        .step-body li {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .step-body code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        /* ── Config table ── */
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 18px;
+            font-size: 0.88rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e8e8e3;
+        }
+
+        .config-table thead tr {
+            background-color: #f5f5f0;
+        }
+
+        .config-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #e0e0d8;
+        }
+
+        .config-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .config-table tr:hover td {
+            background-color: #fafaf8;
+        }
+
+        /* ── Terminal ── */
+        .terminal {
+            background-color: #0f0f0f;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 12px 0 16px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .terminal-bar {
+            background-color: #1e1e1e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background-color: #ff5f57;
+        }
+
+        .terminal-dot.amber {
+            background-color: #febc2e;
+        }
+
+        .terminal-dot.green {
+            background-color: #28c840;
+        }
+
+        .terminal-title {
+            font-size: 0.78rem;
+            color: #666;
+            margin-left: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-body {
+            padding: 18px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .t-line {
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .t-prompt {
+            color: #7ec8a4;
+        }
+
+        .t-cmd {
+            color: #e8e8e3;
+        }
+
+        .t-output {
+            color: #888;
+            display: block;
+        }
+
+        .t-highlight {
+            color: #febc2e;
+        }
+
+        .t-comment {
+            color: #555;
+            font-style: italic;
+        }
+
+        .t-section {
+            color: #6a9fd8;
+            display: block;
+            margin-top: 6px;
+        }
+
+        /* ── Traffic flow diagram ── */
+        .flow-diagram {
+            background-color: #f8f8f6;
+            border: 1px solid #e8e8e3;
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .flow-box {
+            background-color: #ffffff;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .flow-box.waf {
+            background-color: #f5f2ff;
+            border-color: #c4b5f5;
+            color: #6a5acd;
+        }
+
+        .flow-box.vercel {
+            background-color: #f0faf0;
+            border-color: #a8d5a8;
+            color: #2e7d32;
+        }
+
+        .flow-box.user {
+            background-color: #e3f2fd;
+            border-color: #90caf9;
+            color: #1565c0;
+        }
+
+        .flow-arrow {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .flow-label {
+            font-size: 0.78rem;
+            color: #999;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── IP badge ── */
+        .ip-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            color: #444;
+            margin: 2px 4px 2px 0;
+        }
+
+        /* ── Gotcha table ── */
+        .gotcha-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 0;
+            font-size: 0.88rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e8e8e3;
+        }
+
+        .gotcha-table thead tr {
+            background-color: #fff5f5;
+        }
+
+        .gotcha-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            color: #c53030;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #fed7d7;
+        }
+
+        .gotcha-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .gotcha-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .gotcha-table tr:hover td {
+            background-color: #fffafa;
+        }
+
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+
+    <div class="doc-wrapper">
+
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+        <div class="doc-header">
+            <span class="tag in-progress">In Progress</span>
+            <h1>Integrating a Vercel App with Haltdos Enterprise WAF</h1>
+            <div class="doc-meta">Haltdos · WAF · Listener Setup &nbsp;·&nbsp; Last updated May 2026 &nbsp;·&nbsp; 10
+                min read</div>
+        </div>
+
+        <div class="doc-content">
+
+            <p>
+                This guide walks through onboarding a Vercel-hosted application onto the
+                Haltdos Enterprise WAF — creating a listener, configuring server groups,
+                setting the host header correctly, and pointing DNS to the WAF so all
+                traffic is inspected and protected before reaching Vercel.
+            </p>
+
+            <!-- ── KEY INFO ── -->
+            <h2>Key Information About Your Vercel App</h2>
+
+            <p>
+                Before starting, we resolved the Vercel app's DNS to get its actual backend IPs.
+                Vercel is a multi-tenant platform — it does <strong>not</strong> use a static IP.
+                The IPs rotate frequently (TTL of only 86 seconds), and Vercel routes traffic
+                to the correct app using the <strong>Host header</strong>, not the IP alone.
+            </p>
+
+            <div class="terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot amber"></div>
+                    <div class="terminal-dot green"></div>
+                    <span class="terminal-title">bash — haltdos@haltdos-Kartik</span>
+                </div>
+                <div class="terminal-body">
+                    <span class="t-line"><span class="t-prompt">haltdos@haltdos-Kartik:~$</span> <span class="t-cmd">dig
+                            server-blue-new.vercel.app</span></span>
+                    <span class="t-output">;; QUESTION SECTION:</span>
+                    <span class="t-output">;server-blue-new.vercel.app. IN A</span>
+                    <span class="t-output">&nbsp;</span>
+                    <span class="t-output">;; ANSWER SECTION:</span>
+                    <span class="t-line"><span class="t-highlight">server-blue-new.vercel.app. 86 IN A
+                            216.198.79.67</span></span>
+                    <span class="t-line"><span class="t-highlight">server-blue-new.vercel.app. 86 IN A
+                            64.29.17.67</span></span>
+                    <span class="t-output">&nbsp;</span>
+                    <span class="t-output">;; Query time: 0 msec</span>
+                    <span class="t-output">;; TTL: 86 seconds (rotates frequently)</span>
+                </div>
+            </div>
+
+            <p>Three critical facts to keep in mind throughout this setup:</p>
+            <ul>
+                <li>Vercel backend IPs: <span class="ip-badge">216.198.79.67</span> and <span
+                        class="ip-badge">64.29.17.67</span> — both on port <code>443</code></li>
+                <li>Vercel <strong>requires HTTPS</strong> — SSL must be enabled on the Server Group</li>
+                <li>The <strong>Host Header must be set</strong> to <code>server-blue-new.vercel.app</code> — without
+                    this Vercel returns a 404 regardless of the IP</li>
+            </ul>
+
+            <!-- ── TRAFFIC FLOW ── -->
+            <h2>How Traffic Will Flow</h2>
+
+            <div class="flow-diagram">
+                <div class="flow-row">
+                    <div class="flow-box user">👤 User</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">myapp.yourdomain.com</div>
+                    <div class="flow-label">(your domain, DNS points to WAF)</div>
+                </div>
+                <div class="flow-row" style="margin-left: 32px;">
+                    <div class="flow-arrow">↓</div>
+                </div>
+                <div class="flow-row">
+                    <div class="flow-box waf">🛡 Haltdos WAF</div>
+                    <div class="flow-label">inspects &amp; protects all traffic · port 443</div>
+                </div>
+                <div class="flow-row" style="margin-left: 32px;">
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-label">Host Header → server-blue-new.vercel.app</div>
+                </div>
+                <div class="flow-row">
+                    <div class="flow-box vercel">▲ Vercel</div>
+                    <div class="flow-label">216.198.79.67:443 or 64.29.17.67:443</div>
+                </div>
+                <div class="flow-row" style="margin-left: 32px;">
+                    <div class="flow-arrow">↓</div>
+                </div>
+                <div class="flow-row">
+                    <div class="flow-box vercel">✅ Your App</div>
+                    <div class="flow-label">server-blue-new.vercel.app</div>
+                </div>
+            </div>
+
+            <!-- ── STEPS ── -->
+            <h2>Step-by-Step Setup</h2>
+
+            <!-- STEP 1 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h3>Create the Listener</h3>
+                        <p>Apps → WAF → Listeners → Add Listener</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 Apps <span>›</span> WAF <span>›</span> Listeners <span>›</span> Add
+                        Listener</div>
+                    <p>The Listener is the entry point — it defines what domain the WAF listens on and where to forward
+                        traffic. Fill in the fields as follows:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Domain / Virtual IP</strong></td>
+                                <td><code>myapp.yourdomain.com</code></td>
+                                <td>Your own domain — this is what users will hit in their browser</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Type</strong></td>
+                                <td><code>HTTP</code></td>
+                                <td>Select HTTP — HTTPS is handled at the port level in a later step</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Origin Servers</strong></td>
+                                <td><code>216.198.79.67:443</code><br /><code>64.29.17.67:443</code></td>
+                                <td>Add both Vercel IPs. Haltdos will load balance across them — matching how Vercel
+                                    distributes traffic</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Click <strong>Save Changes</strong>.</p>
+
+                    <div class="callout">
+                        <p>💡 Adding both IPs ensures that if Vercel serves traffic from either node, the WAF will
+                            correctly forward to it. Vercel's anycast routing uses both IPs simultaneously.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h3>Create a Server Group</h3>
+                        <p>WAF → Listeners → [your listener] → Load Balancing → Server Groups</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 WAF <span>›</span> Listeners <span>›</span> [listener] <span>›</span> Load
+                        Balancing <span>›</span> Server Groups <span>›</span> Add Server Group</div>
+                    <p>Server Groups define how the WAF connects to the backend origin (Vercel). SSL must be enabled
+                        here because Vercel only accepts HTTPS connections.</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Group Name</strong></td>
+                                <td><code>vercel-backend</code></td>
+                                <td>Any descriptive name — used for identification only</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SSL</strong></td>
+                                <td>✅ Enabled</td>
+                                <td>Mandatory — Vercel rejects plain HTTP connections on port 443</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Connection Timeout</strong></td>
+                                <td><code>30</code> seconds</td>
+                                <td>Vercel apps can have cold-start delays — 30s gives enough headroom</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Read Timeout</strong></td>
+                                <td><code>30</code> seconds</td>
+                                <td>Time to wait for a response from Vercel after the connection is established</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Click <strong>Save Changes</strong>.</p>
+
+                    <div class="callout warning">
+                        <p>⚠️ If SSL is <strong>not</strong> enabled on the Server Group, the WAF will try to connect to
+                            Vercel over plain HTTP on port 443, which Vercel will reject — causing all requests to fail
+                            with a connection error.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h3>Add Both Vercel IPs as Servers</h3>
+                        <p>Server Groups → Servers → Add Server (repeat twice)</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 Server Groups <span>›</span> Servers <span>›</span> Add Server</div>
+                    <p>Add each Vercel IP as a separate server entry inside the Server Group. Do this step
+                        <strong>twice</strong> — once per IP.</p>
+
+                    <p><strong>Server 1</strong></p>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Server</strong></td>
+                                <td><code>216.198.79.67</code></td>
+                                <td>First Vercel backend IP</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Port</strong></td>
+                                <td><code>443</code></td>
+                                <td>Vercel only serves on HTTPS port 443</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DNS Record Type</strong></td>
+                                <td><code>A Record</code></td>
+                                <td>Direct IP — no DNS lookup needed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Remote</strong></td>
+                                <td>✅ True</td>
+                                <td>Mark as remote since Vercel is an external server</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mode</strong></td>
+                                <td><code>Ready</code></td>
+                                <td>Puts the server in active rotation immediately</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Server 2</strong></p>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Server</strong></td>
+                                <td><code>64.29.17.67</code></td>
+                                <td>Second Vercel backend IP</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Port</strong></td>
+                                <td><code>443</code></td>
+                                <td>Vercel only serves on HTTPS port 443</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DNS Record Type</strong></td>
+                                <td><code>A Record</code></td>
+                                <td>Direct IP — no DNS lookup needed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Remote</strong></td>
+                                <td>✅ True</td>
+                                <td>Mark as remote since Vercel is an external server</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mode</strong></td>
+                                <td><code>Ready</code></td>
+                                <td>Puts the server in active rotation immediately</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Click <strong>Save Changes</strong> after each server.</p>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Note on IP rotation:</strong> Vercel's IPs have a TTL of only 86 seconds and can
+                            rotate over time. If traffic starts failing in the future, re-run
+                            <code>dig server-blue-new.vercel.app</code> and update the server IPs. For a more stable
+                            long-term setup, use the hostname <code>server-blue-new.vercel.app</code> in the Server
+                            field with DNS Record Type set to <code>ANY</code> — Haltdos will resolve it dynamically.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h3>Set the Host Header ⚠️ Most Critical Step</h3>
+                        <p>WAF → Listener → Settings → Operational</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 WAF <span>›</span> Listener <span>›</span> Settings <span>›</span>
+                        Operational</div>
+
+                    <p>Find the <strong>Host Header</strong> field and set it to exactly:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">Host Header value to enter</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-highlight">server-blue-new.vercel.app</span>
+                        </div>
+                    </div>
+
+                    <p>Click <strong>Save Changes</strong>.</p>
+
+                    <div class="callout danger">
+                        <p>🚨 <strong>This is the single most important setting in this entire guide.</strong> Vercel is
+                            a shared multi-tenant platform — hundreds of apps share the same IPs. The only way Vercel
+                            knows which app to serve is by reading the <code>Host</code> header on each request. If this
+                            is not set, Vercel will return a <strong>404 for every request</strong> regardless of which
+                            IP you connect to. The WAF must inject this header on every request it proxies to Vercel.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h3>Configure the Listener Port &amp; SSL</h3>
+                        <p>WAF → Listener → Settings → Operational → Add Port</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 WAF <span>›</span> Listener <span>›</span> Settings <span>›</span>
+                        Operational <span>›</span> Add Port</div>
+                    <p>Still in Operational Settings, add the HTTPS port so the WAF accepts incoming traffic from users
+                        over a secure connection.</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Port</strong></td>
+                                <td><code>443</code></td>
+                                <td>Standard HTTPS port — users connect here</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Protocol</strong></td>
+                                <td><code>HTTPS</code></td>
+                                <td>Enables SSL termination at the WAF</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SSL Enabled</strong></td>
+                                <td>✅ True</td>
+                                <td>The WAF will present your domain's SSL certificate to users</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Optionally, also add port <code>80</code> with SSL disabled to catch plain HTTP traffic — you can
+                        then configure an HTTP→HTTPS redirect rule to send all users to the secure version.</p>
+
+                    <p>Click <strong>Save Changes</strong>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div>
+                        <h3>Upload Your SSL Certificate</h3>
+                        <p>WAF → Listener → SSL Management</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="nav-path">🗂 WAF <span>›</span> Listener <span>›</span> SSL Management</div>
+                    <p>Upload the SSL certificate for <strong>your own domain</strong> (e.g.
+                        <code>myapp.yourdomain.com</code>). This is the certificate the WAF will present to users who
+                        connect to your domain.</p>
+
+                    <div class="callout">
+                        <p>💡 This certificate is completely separate from Vercel's own SSL certificate. Vercel's cert
+                            covers <code>*.vercel.app</code> — it is used on the backend connection from WAF to Vercel
+                            (Step 2). Your certificate covers your custom domain and is used on the frontend connection
+                            from the user to the WAF.</p>
+                    </div>
+
+                    <p>You need two certificates in total:</p>
+                    <ul>
+                        <li><strong>Frontend cert</strong> (uploaded here) — for <code>myapp.yourdomain.com</code> —
+                            presented to end users</li>
+                        <li><strong>Backend cert</strong> — Vercel's own <code>*.vercel.app</code> cert — handled
+                            automatically when SSL is enabled on the Server Group</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STEP 7 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <div>
+                        <h3>Update DNS to Point to the WAF</h3>
+                        <p>Your DNS provider → A Record → WAF public IP</p>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <p>The final step is to update your domain's DNS so that <code>myapp.yourdomain.com</code> resolves
+                        to the <strong>Haltdos WAF's public IP</strong> — not directly to Vercel.</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Record Type</th>
+                                <th>Name</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>A</code></td>
+                                <td><code>myapp</code> (or <code>@</code> for root)</td>
+                                <td>Your Haltdos WAF's public IP address</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout success">
+                        <p>✅ Once DNS propagates, all traffic to your domain will flow through the WAF before reaching
+                            Vercel. The WAF will inspect, filter, and protect every request.</p>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ DNS propagation can take anywhere from a few minutes to 48 hours depending on your DNS
+                            provider and TTL settings. Use <code>dig myapp.yourdomain.com</code> to verify the A record
+                            has updated to the WAF IP.</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- ── GOTCHAS ── -->
+            <h2>Common Issues &amp; Fixes</h2>
+
+            <table class="gotcha-table">
+                <thead>
+                    <tr>
+                        <th>Symptom</th>
+                        <th>Cause</th>
+                        <th>Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vercel returns 404</strong></td>
+                        <td>Host Header not set or incorrect</td>
+                        <td>Go to Listener → Operational Settings → set Host Header to exactly
+                            <code>server-blue-new.vercel.app</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>SSL handshake error</strong> (WAF → Vercel)</td>
+                        <td>SSL not enabled on the Server Group</td>
+                        <td>Edit the Server Group and enable SSL — Vercel only accepts HTTPS on port 443</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Connection timeout</strong></td>
+                        <td>Vercel cold-start delay or IP has rotated</td>
+                        <td>Increase Connection/Read Timeout to 30s. Re-run <code>dig</code> and update Server IPs if
+                            they've rotated</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WAF blocks legitimate requests</strong></td>
+                        <td>Security rules flagging app traffic patterns</td>
+                        <td>Check Security Profiles and Rules — whitelist specific patterns or put the listener in
+                            monitor-only mode initially</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vercel rate-limits the WAF</strong></td>
+                        <td>All traffic appears to Vercel as one source IP</td>
+                        <td>Configure Vercel's firewall to whitelist your WAF's public IP address</td>
+                    </tr>
+                    <tr>
+                        <td><strong>App works but images/assets fail</strong></td>
+                        <td>Asset URLs hardcoded to <code>vercel.app</code> domain</td>
+                        <td>Check your app's base URL configuration — assets should use relative URLs or your custom
+                            domain</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="doc-footer">
+            MyDocs · Haltdos WAF · Vercel App Onboarding Guide
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installer Methods · MyDocs</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .doc-wrapper {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6a5acd;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: gap 0.2s;
+        }
+
+        .back-btn:hover {
+            gap: 10px;
+        }
+
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e3;
+        }
+
+        .doc-header .tag {
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .doc-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .doc-header .doc-meta {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .doc-content h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 48px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e3;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-content p {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .doc-content ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .doc-content li {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+        .doc-content code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        .doc-content hr {
+            border: none;
+            border-top: 1px solid #e8e8e3;
+            margin: 44px 0;
+        }
+
+        /* ── Callouts ── */
+        .callout {
+            background-color: #f5f2ff;
+            border-left: 4px solid #6a5acd;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4a3f8f;
+        }
+
+        .callout.warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .callout.warning p {
+            color: #92400e;
+        }
+
+        .callout.success {
+            background-color: #f0faf0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .callout.success p {
+            color: #2e7d32;
+        }
+
+        /* ── Method card (top-level section) ── */
+        .method-card {
+            background-color: #ffffff;
+            border: 1px solid #e8e8e3;
+            border-radius: 18px;
+            padding: 32px;
+            margin-bottom: 28px;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0f0ec;
+        }
+
+        .method-badge {
+            background-color: #f5f2ff;
+            border: 1px solid #d8d0f5;
+            color: #6a5acd;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .method-header h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .method-header p {
+            font-size: 0.85rem;
+            color: #999;
+            margin: 3px 0 0;
+        }
+
+        .method-body p {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .method-body ul {
+            padding-left: 20px;
+            margin: 8px 0 16px;
+        }
+
+        .method-body li {
+            font-size: 0.92rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        .method-body code {
+            background-color: #f0f0ec;
+            border: 1px solid #e0e0d8;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #6a5acd;
+        }
+
+        /* ── Step inside a method ── */
+        .method-step {
+            margin-bottom: 24px;
+        }
+
+        .method-step-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .step-dot {
+            width: 26px;
+            height: 26px;
+            background-color: #6a5acd;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-dot-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* ── Terminal ── */
+        .terminal {
+            background-color: #0f0f0f;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 10px 0 16px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .terminal-bar {
+            background-color: #1e1e1e;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background-color: #ff5f57;
+        }
+
+        .terminal-dot.amber {
+            background-color: #febc2e;
+        }
+
+        .terminal-dot.green {
+            background-color: #28c840;
+        }
+
+        .terminal-title {
+            font-size: 0.78rem;
+            color: #666;
+            margin-left: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-body {
+            padding: 18px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .t-line {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .t-prompt {
+            color: #7ec8a4;
+        }
+
+        .t-cmd {
+            color: #e8e8e3;
+        }
+
+        .t-output {
+            color: #888;
+            display: block;
+        }
+
+        .t-comment {
+            color: #555;
+            font-style: italic;
+        }
+
+        /* ── Flag table ── */
+        .flag-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 18px;
+            font-size: 0.88rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e8e8e3;
+        }
+
+        .flag-table thead tr {
+            background-color: #f5f5f0;
+        }
+
+        .flag-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #e0e0d8;
+        }
+
+        .flag-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .flag-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .flag-table tr:hover td {
+            background-color: #fafaf8;
+        }
+
+        /* ── OS badge ── */
+        .os-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #fff3e0;
+            border: 1px solid #ffe0b2;
+            color: #e65100;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+        }
+
+        /* ── Nav path ── */
+        .nav-path {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f5f5f0;
+            border: 1px solid #e0e0d8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .nav-path span {
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+
+        /* ── Summary table ── */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 0;
+            font-size: 0.88rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e8e8e3;
+        }
+
+        .summary-table thead tr {
+            background-color: #f5f5f0;
+        }
+
+        .summary-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #e0e0d8;
+        }
+
+        .summary-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0ec;
+            color: #444;
+            vertical-align: middle;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .summary-table tr:hover td {
+            background-color: #fafaf8;
+        }
+
+        .badge-simple {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .badge-simple.green {
+            background-color: #e6f4ea;
+            color: #2e7d32;
+        }
+
+        .badge-simple.blue {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-simple.amber {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e3;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">My<span>Docs</span></div>
+    </nav>
+
+    <div class="doc-wrapper">
+
+        <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+        <div class="doc-header">
+            <span class="tag done">Done</span>
+            <h1>Haltdos Installation Methods</h1>
+            <div class="doc-meta">
+                Haltdos · Build &amp; Release &nbsp;·&nbsp; Last updated April 2025 &nbsp;·&nbsp; 8 min read
+            </div>
+        </div>
+
+        <div class="doc-content">
+
+            <p>
+                There are three separate ways to install Haltdos depending on your
+                environment and requirements. Each method is independent — choose the
+                one that fits your setup.
+            </p>
+
+            <div class="os-badge">🐧 Rocky Linux / RHEL / CentOS</div>
+
+            <!-- ── SUMMARY TABLE ── -->
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>How it works</th>
+                        <th>Use when</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Method 1</strong> — wget Download</td>
+                        <td>Downloads the pre-built binary directly from the Haltdos server</td>
+                        <td><span class="badge-simple green">Quickest</span> — no build required</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method 2</strong> — Go Installer</td>
+                        <td>Runs the installer binary with the update server URL</td>
+                        <td><span class="badge-simple blue">Standard</span> — after building or downloading</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method 3</strong> — Java Installer</td>
+                        <td>Installs Java first, then runs the installer in standalone mode</td>
+                        <td><span class="badge-simple amber">Java env</span> — when Java runtime is required</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Installation Methods</h2>
+
+            <!-- ══════════════════════════════
+           METHOD 1 — WGET DOWNLOAD
+      ══════════════════════════════ -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div>
+                        <div class="method-badge">Method 1</div>
+                    </div>
+                    <div>
+                        <h3>Download via wget</h3>
+                        <p>Download the pre-built installer binary directly from the Haltdos internal server</p>
+                    </div>
+                </div>
+
+                <div class="method-body">
+
+                    <p>
+                        Use this method to download the latest pre-compiled <code>haltdos-installer</code>
+                        binary directly onto the target machine. No build tools or Go environment required.
+                    </p>
+
+                    <div class="method-step">
+                        <div class="method-step-label">
+                            <div class="step-dot">1</div>
+                            <span class="step-dot-label">Run the wget command</span>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-bar">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot amber"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">bash — root@server</span>
+                            </div>
+                            <div class="terminal-body">
+                                <span class="t-line">
+                                    <span class="t-prompt">$</span>
+                                    <span class="t-cmd"> wget
+                                        https://haltdos-internal.haltdos.com/resources/installer/v8/haltdos-installer</span>
+                                </span>
+                                <span class="t-output">Resolving haltdos-internal.haltdos.com...</span>
+                                <span class="t-output">Connecting to haltdos-internal.haltdos.com...</span>
+                                <span class="t-output">HTTP request sent, awaiting response... 200 OK</span>
+                                <span class="t-output">Saving to: 'haltdos-installer'</span>
+                                <span class="t-output">haltdos-installer 100%[=============================>] ~16M
+                                    received</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-step">
+                        <div class="method-step-label">
+                            <div class="step-dot">2</div>
+                            <span class="step-dot-label">Make the binary executable</span>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-bar">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot amber"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">bash — root@server</span>
+                            </div>
+                            <div class="terminal-body">
+                                <span class="t-line">
+                                    <span class="t-prompt">$</span>
+                                    <span class="t-cmd"> chmod +x haltdos-installer</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout">
+                        <p>💡 After downloading, the binary is ready to use. You can now proceed with
+                            <strong>Method 2</strong> (Go installer) to run it and install Haltdos.
+                        </p>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ This URL points to the <strong>internal Haltdos server</strong>. Make sure
+                            your machine has network access to <code>haltdos-internal.haltdos.com</code>
+                            before running this command.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════
+           METHOD 2 — GO INSTALLER
+      ══════════════════════════════ -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div>
+                        <div class="method-badge">Method 2</div>
+                    </div>
+                    <div>
+                        <h3>Go Installer</h3>
+                        <p>Run the haltdos-installer binary directly to install Haltdos</p>
+                    </div>
+                </div>
+
+                <div class="method-body">
+
+                    <p>
+                        Use this after you have obtained the <code>haltdos-installer</code> binary
+                        (either via <strong>Method 1</strong> wget download or by building from source).
+                        This runs the installer and connects to the Haltdos update server.
+                    </p>
+
+                    <div class="method-step">
+                        <div class="method-step-label">
+                            <div class="step-dot">1</div>
+                            <span class="step-dot-label">Run the installer</span>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-bar">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot amber"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">bash — root@server</span>
+                            </div>
+                            <div class="terminal-body">
+                                <span class="t-line">
+                                    <span class="t-prompt">$</span>
+                                    <span class="t-cmd"> ./haltdos-installer install -m
+                                        https://update.haltdos.com</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>Here is what each part of the command means:</p>
+
+                    <table class="flag-table">
+                        <thead>
+                            <tr>
+                                <th>Part</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>./haltdos-installer</code></td>
+                                <td>—</td>
+                                <td>Executes the installer binary from the current directory</td>
+                            </tr>
+                            <tr>
+                                <td><code>install</code></td>
+                                <td>—</td>
+                                <td>The install subcommand — triggers the full installation process</td>
+                            </tr>
+                            <tr>
+                                <td><code>-m</code></td>
+                                <td><code>https://update.haltdos.com</code></td>
+                                <td>Mirror / update server URL — where the installer fetches packages from</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>⚠️ The target machine must have outbound internet access to
+                            <code>https://update.haltdos.com</code> for the installer to fetch
+                            the required packages during installation.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════
+           METHOD 3 — JAVA INSTALLER
+      ══════════════════════════════ -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div>
+                        <div class="method-badge">Method 3</div>
+                    </div>
+                    <div>
+                        <h3>Java Installer (Standalone)</h3>
+                        <p>Install Java first, then run the Haltdos installer in standalone mode</p>
+                    </div>
+                </div>
+
+                <div class="method-body">
+
+                    <p>
+                        Use this method when your environment requires a Java runtime. This is a
+                        two-step process — first install Java 21, then run the Haltdos installer
+                        in <code>STANDALONE</code> mode with your license key and target IP.
+                    </p>
+
+                    <!-- Step 1 — Install Java -->
+                    <div class="method-step">
+                        <div class="method-step-label">
+                            <div class="step-dot">1</div>
+                            <span class="step-dot-label">Install Java 21 (OpenJDK)</span>
+                        </div>
+                        <p style="font-size:0.9rem; color:#555; margin: 6px 0 10px;">
+                            Use <code>dnf</code> to install the Java 21 OpenJDK runtime on Rocky Linux / RHEL / CentOS:
+                        </p>
+                        <div class="terminal">
+                            <div class="terminal-bar">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot amber"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">bash — root@server</span>
+                            </div>
+                            <div class="terminal-body">
+                                <span class="t-line">
+                                    <span class="t-prompt">$</span>
+                                    <span class="t-cmd"> sudo dnf install java-21-openjdk -y</span>
+                                </span>
+                                <span class="t-output">Last metadata expiration check: ...</span>
+                                <span class="t-output">Dependencies resolved.</span>
+                                <span class="t-output">Installing: java-21-openjdk ...</span>
+                                <span class="t-output">Complete!</span>
+                            </div>
+                        </div>
+                        <div class="callout">
+                            <p>💡 The <code>-y</code> flag automatically confirms all prompts during
+                                installation so you don't have to type "yes" manually.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 — Run Java installer -->
+                    <div class="method-step">
+                        <div class="method-step-label">
+                            <div class="step-dot">2</div>
+                            <span class="step-dot-label">Run the Haltdos installer in Standalone mode</span>
+                        </div>
+                        <p style="font-size:0.9rem; color:#555; margin: 6px 0 10px;">
+                            Once Java is installed, run the Haltdos installer with the following flags:
+                        </p>
+                        <div class="terminal">
+                            <div class="terminal-bar">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot amber"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">bash — root@server</span>
+                            </div>
+                            <div class="terminal-body">
+                                <span class="t-line">
+                                    <span class="t-prompt">$</span>
+                                    <span class="t-cmd"> ./haltdos-installer install -v -t STANDALONE -m
+                                        https://update.haltdos.com -l G9BWD2YQNI --ip 172.16.0.65</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>Here is what each flag means:</p>
+
+                    <table class="flag-table">
+                        <thead>
+                            <tr>
+                                <th>Flag</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>install</code></td>
+                                <td>—</td>
+                                <td>Triggers the installation process</td>
+                            </tr>
+                            <tr>
+                                <td><code>-v</code></td>
+                                <td>—</td>
+                                <td>Verbose mode — prints detailed output during installation</td>
+                            </tr>
+                            <tr>
+                                <td><code>-t</code></td>
+                                <td><code>STANDALONE</code></td>
+                                <td>Installation type — <code>STANDALONE</code> installs Haltdos as a single
+                                    self-contained node</td>
+                            </tr>
+                            <tr>
+                                <td><code>-m</code></td>
+                                <td><code>https://update.haltdos.com</code></td>
+                                <td>Mirror / update server URL — where packages are fetched from</td>
+                            </tr>
+                            <tr>
+                                <td><code>-l</code></td>
+                                <td><code>G9BWD2YQNI</code></td>
+                                <td>License key — your unique Haltdos activation license</td>
+                            </tr>
+                            <tr>
+                                <td><code>--ip</code></td>
+                                <td><code>172.16.0.65</code></td>
+                                <td>The IP address of the machine being installed on</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>⚠️ Replace <code>G9BWD2YQNI</code> with your actual license key and
+                            <code>172.16.0.65</code> with the real IP address of your target machine
+                            before running this command.
+                        </p>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ <strong>Done!</strong> Once the command completes, Haltdos is installed
+                            in standalone mode and will be accessible at the IP address you provided.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="doc-footer">
+            MyDocs · Haltdos Installation Methods
+        </div>
+
+    </div>
+
+</body>
+
+</html>
