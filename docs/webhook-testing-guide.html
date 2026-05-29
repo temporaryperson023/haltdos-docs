@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webhook Testing Guide · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html"><span class="nav-item-icon">⚙️</span>Binary
+                    Components Upload<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Testing</div>
+                <a class="nav-item active" href="webhook-testing-guide.html"><span
+                        class="nav-item-icon">🪝</span>Webhook Testing Guide<span
+                        class="nav-item-tag done">Done</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Testing</span>
+                <span class="sep">›</span>
+                <span class="current">Webhook Testing Guide</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>Webhook Testing Guide</h1>
+                    <div class="doc-meta">Haltdos · Testing &nbsp;·&nbsp; Last updated May 2026 &nbsp;·&nbsp; 10 min
+                        read</div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        This guide walks through the complete process of setting up, triggering,
+                        and verifying webhooks on the Haltdos platform using
+                        <strong>webhook.site</strong> as a free live receiver —
+                        no prior knowledge required.
+                    </p>
+
+                    <!-- BIG PICTURE -->
+                    <h2 id="big-picture">How It Works</h2>
+
+                    <p>Before diving in, here's the full picture of what we're doing:</p>
+
+                    <div class="flow-diagram">
+                        <div class="flow-row">
+                            <div class="flow-box waf">🛡 Haltdos Platform</div>
+                            <div class="flow-label">— Event occurs (attack, alert, traffic spike)</div>
+                        </div>
+                        <div class="flow-row" style="margin-left: 20px;">
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-label">Webhook fires — sends HTTP POST request</div>
+                        </div>
+                        <div class="flow-row">
+                            <div class="flow-box user">🌐 webhook.site</div>
+                            <div class="flow-label">— Receives and displays the request live</div>
+                        </div>
+                        <div class="flow-row" style="margin-left: 20px;">
+                            <div class="flow-arrow">↓</div>
+                        </div>
+                        <div class="flow-row">
+                            <div class="flow-box">👀 You</div>
+                            <div class="flow-label">— Verify method, headers, and payload</div>
+                        </div>
+                    </div>
+
+                    <div class="callout info">
+                        <p>💡 <strong>webhook.site</strong> is a free tool that gives you a unique URL. Any HTTP request
+                            sent to that URL appears on the page in real time — perfect for testing without writing any
+                            code.</p>
+                    </div>
+
+                    <!-- UNDERSTANDING WEBHOOKS -->
+                    <h2 id="understanding-webhooks">Understanding Webhooks</h2>
+
+                    <p>A webhook is an automatic HTTP request that Haltdos fires when something happens on the platform
+                        — like a security event, traffic spike, or alert. Instead of you checking the dashboard
+                        manually, Haltdos pushes the information to any URL you configure.</p>
+
+                    <p>The configuration fields you'll encounter:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>What it does</th>
+                                <th>Tester's Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enable</strong></td>
+                                <td>Turns the webhook on or off</td>
+                                <td>Always test both enabled and disabled states</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Name</strong></td>
+                                <td>Label for this webhook</td>
+                                <td>Test with special characters, long strings, and blank</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stack</strong></td>
+                                <td>Which stack this webhook is scoped to</td>
+                                <td>Test with valid and invalid stacks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HTTP Method</strong></td>
+                                <td>POST / PUT / DELETE / UPDATE</td>
+                                <td>POST is default — test all four methods</td>
+                            </tr>
+                            <tr>
+                                <td><strong>URL</strong></td>
+                                <td>The endpoint that receives the payload</td>
+                                <td>Your webhook.site URL goes here</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payload Location</strong></td>
+                                <td>Where data is sent — ARG, PARAM, or BODY</td>
+                                <td>Critical — changes how payload is delivered</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payload Name</strong></td>
+                                <td>The key name for the payload</td>
+                                <td>Test blank and special characters</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attribute Type</strong></td>
+                                <td>ARG / PARAM / HEADER / COOKIE</td>
+                                <td>For passing auth tokens or custom metadata</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attribute Name</strong></td>
+                                <td>Name of the attribute</td>
+                                <td>e.g. <code>Authorization</code>, <code>x-api-key</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Attribute Value</strong></td>
+                                <td>Value of the attribute</td>
+                                <td>e.g. your token value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2 id="payload-location">Understanding Payload Location</h2>
+
+                    <p>This is the most important field to understand as a tester. It controls <em>where</em> the data
+                        lands in the HTTP request:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Where data is sent</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>BODY</code></td>
+                                <td>Inside the request body — standard for REST APIs</td>
+                                <td><code>{"testPayload": "value"}</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>PARAM</code></td>
+                                <td>As a query parameter appended to the URL</td>
+                                <td><code>?testPayload=value</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>ARG</code></td>
+                                <td>Passed as an argument — similar to query args</td>
+                                <td>URL argument format</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>⚠️ Make sure your receiver is checking the correct location based on what you configure. A
+                            mismatch means the payload arrives but you won't find it where you're looking.</p>
+                    </div>
+
+                    <!-- STEP BY STEP -->
+                    <h2 id="step-by-step">Step-by-Step Testing</h2>
+
+                    <!-- STEP 1 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h3>Get Your Free Receiver URL from webhook.site</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Open a new browser tab and go to:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>https://webhook.site</code></pre>
+                            </div>
+                            <p>The moment the page loads, you will see a unique URL at the top that looks like this:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">webhook.site — Your unique URL</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span
+                                            class="t-highlight">https://webhook.site/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span></span>
+                                </div>
+                            </div>
+                            <p>Copy that URL — this is your personal temporary receiver. Every HTTP request sent to this
+                                URL will appear live on the left panel of this page.</p>
+                            <div class="callout warning">
+                                <p>⚠️ Keep this tab open the entire time. If you refresh the page you will get a new URL
+                                    and lose visibility of previous requests.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h3>Create a Webhook in Haltdos</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Log in to your Haltdos Enterprise dashboard and navigate to:</p>
+                            <div class="nav-path">🗂 System <span>›</span> Integration <span>›</span> Webhooks</div>
+                            <p>Click <strong>Add Webhook</strong> and fill in the form with these exact values:</p>
+
+                            <table class="config-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Value to enter</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Enable</strong></td>
+                                        <td><span class="toggle-on">Enabled</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Name</strong></td>
+                                        <td><code>Test-Webhook-1</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Stack</strong></td>
+                                        <td>Select your stack from the dropdown</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HTTP Method</strong></td>
+                                        <td><code>POST</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>URL</strong></td>
+                                        <td>← Paste your webhook.site URL here</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payload Location</strong></td>
+                                        <td><code>BODY</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payload Name</strong></td>
+                                        <td><code>testPayload</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Attribute Type</strong></td>
+                                        <td><code>HEADER</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Attribute Name</strong></td>
+                                        <td><code>x-test-header</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Attribute Value</strong></td>
+                                        <td><code>haltdos-test-123</code></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>Click <strong>Save Changes</strong>.</p>
+
+                            <div class="callout info">
+                                <p>💡 What we just did — we told Haltdos: "When an event fires, send a POST request to
+                                    my webhook.site URL, put the data in the request body, and attach a custom header
+                                    called <code>x-test-header</code> so I can verify it arrived."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h3>Trigger the Webhook</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>For the webhook to fire, an event must occur on the Haltdos platform. As a tester you
+                                have two options:</p>
+                            <ul>
+                                <li><strong>Wait for a real event</strong> — a traffic spike, security alert, or system
+                                    event will automatically trigger configured webhooks</li>
+                                <li><strong>Manually trigger a test event</strong> — check under <strong>System →
+                                        Events</strong> to see if your setup supports manually firing a test event</li>
+                            </ul>
+                            <div class="callout info">
+                                <p>💡 Some Haltdos versions have a <strong>"Send Test"</strong> or <strong>"Test
+                                        Webhook"</strong> button directly on the webhook configuration page. Check if
+                                    yours does — it's the easiest way to trigger it immediately.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <h3>Watch It Arrive on webhook.site</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Switch back to your webhook.site browser tab. On the left panel a new entry will appear —
+                                this is the incoming request from Haltdos. Click on it and you will see the full request
+                                details:</p>
+
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">webhook.site — Incoming Request</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">Method:</span> <span
+                                            class="t-cmd">POST</span></span>
+                                    <span class="t-line"><span class="t-highlight">URL:</span> <span
+                                            class="t-cmd">/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span></span>
+                                    <span class="t-output">&nbsp;</span>
+                                    <span class="t-line"><span class="t-highlight">Headers:</span></span>
+                                    <span class="t-line"> <span class="t-cmd">x-test-header:
+                                            haltdos-test-123</span></span>
+                                    <span class="t-output">&nbsp;</span>
+                                    <span class="t-line"><span class="t-highlight">Body:</span></span>
+                                    <span class="t-line"> <span class="t-cmd">{ "testPayload": "..." }</span></span>
+                                </div>
+                            </div>
+
+                            <div class="callout success">
+                                <p>✅ If you see this — <strong>it worked!</strong> Haltdos successfully fired a webhook
+                                    and your receiver captured it.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <h3>Verify Everything — Your Checklist</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Once the request arrives on webhook.site, go through each of these verification points
+                                one by one:</p>
+
+                            <table class="config-table">
+                                <thead>
+                                    <tr>
+                                        <th>Check</th>
+                                        <th>What to look for</th>
+                                        <th>Expected Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>✅ <strong>Method</strong></td>
+                                        <td>Look at the Method field at the top</td>
+                                        <td>Should be <code>POST</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td>✅ <strong>URL</strong></td>
+                                        <td>Check the URL the request hit</td>
+                                        <td>Should match your webhook.site unique path</td>
+                                    </tr>
+                                    <tr>
+                                        <td>✅ <strong>Custom Header</strong></td>
+                                        <td>Look in the Headers section</td>
+                                        <td><code>x-test-header: haltdos-test-123</code> present</td>
+                                    </tr>
+                                    <tr>
+                                        <td>✅ <strong>Payload</strong></td>
+                                        <td>Look in the Body section</td>
+                                        <td><code>testPayload</code> key present with a value</td>
+                                    </tr>
+                                    <tr>
+                                        <td>✅ <strong>Payload Location</strong></td>
+                                        <td>Confirm data is in BODY not URL params</td>
+                                        <td>Since we set BODY — data should not be in the URL</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TROUBLESHOOTING -->
+                    <h2 id="troubleshooting">Troubleshooting — Nothing Arrived?</h2>
+
+                    <p>If nothing shows up on webhook.site after triggering an event, work through this checklist:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Symptom</th>
+                                <th>Likely Cause</th>
+                                <th>Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>No request on webhook.site</td>
+                                <td>Webhook is disabled</td>
+                                <td>Go back to the webhook config and confirm Enable is turned on</td>
+                            </tr>
+                            <tr>
+                                <td>No request on webhook.site</td>
+                                <td>Wrong URL pasted</td>
+                                <td>Copy the webhook.site URL again — make sure there are no extra spaces</td>
+                            </tr>
+                            <tr>
+                                <td>No request on webhook.site</td>
+                                <td>No event triggered</td>
+                                <td>Confirm an actual event fired on Haltdos — check System → Events</td>
+                            </tr>
+                            <tr>
+                                <td>No request on webhook.site</td>
+                                <td>Outbound network blocked</td>
+                                <td>Ask your admin if the Haltdos server can make outbound HTTP calls</td>
+                            </tr>
+                            <tr>
+                                <td>Request arrives but payload missing</td>
+                                <td>Wrong Payload Location</td>
+                                <td>Check BODY vs PARAM — make sure you're looking in the right place</td>
+                            </tr>
+                            <tr>
+                                <td>Request arrives but header missing</td>
+                                <td>Attribute not saved correctly</td>
+                                <td>Re-check Attribute Name and Value fields in the webhook config</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ADVANCED TEST SCENARIOS -->
+                    <h2 id="test-scenarios">Advanced Test Scenarios</h2>
+
+                    <p>Once the basic test passes, run through these scenarios to do a thorough verification:</p>
+
+                    <h3>Functional Tests</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Test</th>
+                                <th>How to test</th>
+                                <th>Expected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>F1</td>
+                                <td>HTTP Method — POST</td>
+                                <td>Set method to POST, trigger event</td>
+                                <td>webhook.site shows POST</td>
+                            </tr>
+                            <tr>
+                                <td>F2</td>
+                                <td>HTTP Method — PUT</td>
+                                <td>Change method to PUT, trigger event</td>
+                                <td>webhook.site shows PUT</td>
+                            </tr>
+                            <tr>
+                                <td>F3</td>
+                                <td>Payload Location — BODY</td>
+                                <td>Set to BODY, check request body on webhook.site</td>
+                                <td>Payload in request body as JSON</td>
+                            </tr>
+                            <tr>
+                                <td>F4</td>
+                                <td>Payload Location — PARAM</td>
+                                <td>Set to PARAM, check URL on webhook.site</td>
+                                <td>Payload as <code>?testPayload=value</code> in URL</td>
+                            </tr>
+                            <tr>
+                                <td>F5</td>
+                                <td>Custom header sent</td>
+                                <td>Check Headers section on webhook.site</td>
+                                <td><code>x-test-header: haltdos-test-123</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Negative Tests</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Test</th>
+                                <th>How to test</th>
+                                <th>Expected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>N1</td>
+                                <td>Invalid URL</td>
+                                <td>Enter a non-existent URL, trigger event</td>
+                                <td>Haltdos handles failure gracefully — no crash</td>
+                            </tr>
+                            <tr>
+                                <td>N2</td>
+                                <td>Disabled webhook</td>
+                                <td>Disable the webhook, trigger event</td>
+                                <td>Nothing arrives on webhook.site</td>
+                            </tr>
+                            <tr>
+                                <td>N3</td>
+                                <td>Blank payload name</td>
+                                <td>Leave Payload Name empty, save and trigger</td>
+                                <td>Either validation error or empty key in payload</td>
+                            </tr>
+                            <tr>
+                                <td>N4</td>
+                                <td>Unreachable URL</td>
+                                <td>Enter <code>https://localhost:9999</code>, trigger event</td>
+                                <td>Haltdos should log a delivery failure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Edge Case Tests</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Test</th>
+                                <th>What to check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>E1</td>
+                                <td>Duplicate webhook names</td>
+                                <td>Create two webhooks with the same name — does Haltdos allow it?</td>
+                            </tr>
+                            <tr>
+                                <td>E2</td>
+                                <td>Multiple webhooks for same stack</td>
+                                <td>Do all webhooks fire? Does order matter?</td>
+                            </tr>
+                            <tr>
+                                <td>E3</td>
+                                <td>Very long attribute value</td>
+                                <td>Enter 500+ character value — does it get truncated?</td>
+                            </tr>
+                            <tr>
+                                <td>E4</td>
+                                <td>Special characters in name</td>
+                                <td>Use <code>!@#$%^&*()</code> in the Name field — validation behavior?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="vercel-waf-onboarding.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">Vercel WAF Onboarding</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="../index.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Back to Dashboard</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · Webhook Testing Guide</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+                { title: 'Webhook Testing Guide', icon: '🪝', status: 'done', desc: 'Step-by-step webhook verification using webhook.site', href: 'webhook-testing-guide.html' },
+            ];
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('hd-theme', next);
+                updateThemeUI(next);
+            });
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => { bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item'; a.href = '#' + h.id; a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            document.querySelectorAll('.doc-content h2').forEach(h => {
+                new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) {
+                            toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                            const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                            if (a) a.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-10% 0px -80% 0px' }).observe(h);
+            });
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied'); btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+            const overlay = document.getElementById('searchOverlay'), searchInput = document.getElementById('searchInput'), searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
+
+</body>
+
+</html>
