@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TACACS+ Server Setup on Rocky Linux · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html"><span class="nav-item-icon">⚙️</span>Binary
+                    Components Upload<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item active" href="tacacs-server-setup-rocky.html"><span
+                        class="nav-item-icon">🖥️</span>TACACS+ Server Setup<span
+                        class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Testing</div>
+                <a class="nav-item" href="webhook-testing-guide.html"><span class="nav-item-icon">🪝</span>Webhook
+                    Testing Guide<span class="nav-item-tag done">Done</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Configuration</span>
+                <span class="sep">›</span>
+                <span class="current">TACACS+ Server Setup on Rocky Linux</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>TACACS+ Server Setup on Rocky Linux</h1>
+                    <div class="doc-meta">
+                        Haltdos · Configuration &nbsp;·&nbsp; Rocky Linux / RHEL &nbsp;·&nbsp; Last updated June 2026
+                        &nbsp;·&nbsp; 10 min read
+                    </div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        This guide walks through setting up a TACACS+ authentication server
+                        on Rocky Linux using Docker. By the end you will have a running
+                        TACACS+ container with live log monitoring accessible directly
+                        from the host machine.
+                    </p>
+
+                    <div class="callout warning">
+                        <p>⚠️ All commands in this guide must be run as <strong>root</strong> or with <code>sudo</code>.
+                            The user home directory used throughout is <code>/home/haltdos</code> — replace this with
+                            your actual username if different.</p>
+                    </div>
+
+                    <!-- PREREQUISITES -->
+                    <h2 id="prerequisites">Prerequisites</h2>
+
+                    <ul>
+                        <li>Rocky Linux VM (or RHEL / CentOS equivalent)</li>
+                        <li>Internet access on the VM to pull Docker and clone the repo</li>
+                        <li>A user account — this guide uses <code>haltdos</code> as the username</li>
+                    </ul>
+
+                    <!-- STEP 1 — DOCKER -->
+                    <h2 id="install-docker">Step 1 — Install Docker</h2>
+
+                    <p>Install Docker and enable it to start on boot:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io
+sudo systemctl enable --now docker</code></pre>
+                    </div>
+
+                    <p>Verify Docker is running:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker --version
+sudo systemctl status docker</code></pre>
+                    </div>
+
+                    <!-- STEP 2 — CLONE -->
+                    <h2 id="clone-repo">Step 2 — Clone the TACACS+ Docker Image Repo</h2>
+
+                    <p>Navigate to the haltdos user home directory and clone the TACACS+ Docker image repository:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /home/haltdos
+git clone https://github.com/llima3000/tacplus_image
+cd tacplus_image</code></pre>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Important path note:</strong> Always use the full path
+                            <code>/home/haltdos/tacplus_image/</code> in all subsequent commands. Do NOT use
+                            <code>$(whoami)</code> when running as root — it resolves to <code>/home/root</code> which
+                            does not exist and will cause mount errors.</p>
+                    </div>
+
+                    <!-- STEP 3 — BUILD -->
+                    <h2 id="build-image">Step 3 — Build the Docker Image</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker build --no-cache -t tacplus .</code></pre>
+                    </div>
+
+                    <p>This will take a few minutes. Once complete you should see
+                        <code>Successfully tagged tacplus:latest</code>.</p>
+
+                    <!-- STEP 4 — CONFIG -->
+                    <h2 id="create-config">Step 4 — Create the TACACS+ Configuration File</h2>
+
+                    <p>Create the <code>tac_plus.conf</code> file with your users and groups. The config below includes
+                        example users — update the usernames and passwords to match your requirements:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat > /home/haltdos/tacplus_image/tac_plus.conf << 'EOF'
+key = tacacs123
+
+accounting file = /var/log/tac_plus.log
+
+group = netadmin {
+    default service = permit
+    service = exec {
+        priv-lvl = 15
+    }
+}
+
+user = tacadmin {
+    member = netadmin
+    login    = cleartext "tacadmin123"
+    pap      = cleartext "tacadmin123"
+    chap     = cleartext "tacadmin123"
+}
+
+user = chap_user {
+    member = netadmin
+    chap   = cleartext "Chap@123"
+}
+
+user = chap_user1 {
+    member = netadmin
+    chap   = cleartext "Chap@1234"
+}
+EOF</code></pre>
+                    </div>
+
+                    <p>Verify the file was created correctly:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat /home/haltdos/tacplus_image/tac_plus.conf</code></pre>
+                    </div>
+
+                    <div class="callout info">
+                        <p>💡 <strong>About the accounting file path:</strong> The path must be set to
+                            <code>/var/log/tac_plus.log</code> — this is the actual log file name inside the container.
+                            Using <code>tac_plus_acct.log</code> will result in a file-not-found error.</p>
+                    </div>
+
+                    <h3>Config Fields Explained</h3>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>key</code></td>
+                                <td><code>tacacs123</code></td>
+                                <td>Shared secret between the TACACS+ server and Haltdos. Must match exactly in both
+                                    places.</td>
+                            </tr>
+                            <tr>
+                                <td><code>accounting file</code></td>
+                                <td><code>/var/log/tac_plus.log</code></td>
+                                <td>Path inside the container where authentication logs are written.</td>
+                            </tr>
+                            <tr>
+                                <td><code>group = netadmin</code></td>
+                                <td>—</td>
+                                <td>Defines a group with full service permit and privilege level 15.</td>
+                            </tr>
+                            <tr>
+                                <td><code>login = cleartext</code></td>
+                                <td>Password string</td>
+                                <td>Password for ASCII/login authentication.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pap = cleartext</code></td>
+                                <td>Password string</td>
+                                <td>Password for PAP authentication.</td>
+                            </tr>
+                            <tr>
+                                <td><code>chap = cleartext</code></td>
+                                <td>Password string</td>
+                                <td>Password for CHAP authentication — this is what you use to log into Haltdos UI.</td>
+                            </tr>
+                            <tr>
+                                <td><code>member = netadmin</code></td>
+                                <td>Group name</td>
+                                <td>Assigns the user to the netadmin group defined above.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- STEP 5 — FIREWALL -->
+                    <h2 id="firewall">Step 5 — Open Firewall Port 49</h2>
+
+                    <p>TACACS+ uses port 49. Open it permanently in the firewall:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo firewall-cmd --permanent --add-port=49/tcp
+sudo firewall-cmd --reload</code></pre>
+                    </div>
+
+                    <p>Both commands should return <code>success</code>.</p>
+
+                    <!-- STEP 6 — RUN -->
+                    <h2 id="run-container">Step 6 — Run the TACACS+ Container</h2>
+
+                    <p>Start the container with the config file and log directory mounted from the host:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker run -d \
+  --name tacplus \
+  -p 49:49 \
+  -v /home/haltdos/tacplus_image/tac_plus.conf:/etc/tacacs+/tac_plus.conf \
+  -v /var/log/tacacs:/var/log \
+  tacplus</code></pre>
+                    </div>
+
+                    <p>The two <code>-v</code> flags do the following:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Flag</th>
+                                <th>What it mounts</th>
+                                <th>Why</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>-v ...tac_plus.conf:/etc/tacacs+/tac_plus.conf</code></td>
+                                <td>Your config file into the container</td>
+                                <td>Container reads your users and settings from this file</td>
+                            </tr>
+                            <tr>
+                                <td><code>-v /var/log/tacacs:/var/log</code></td>
+                                <td>Host directory into container's <code>/var/log</code></td>
+                                <td>Logs written inside the container appear on the host at
+                                    <code>/var/log/tacacs/</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- STEP 7 — VERIFY -->
+                    <h2 id="verify">Step 7 — Verify the Container is Running</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker ps | grep tacplus</code></pre>
+                    </div>
+
+                    <p>You should see output like this:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-prompt">root@localhost:~#</span> <span
+                                    class="t-cmd">docker ps | grep tacplus</span></span>
+                            <span class="t-line"><span class="t-highlight">ac5d1efabacd tacplus "/bin/sh -c '/usr/sb…" 6
+                                    seconds ago Up 5 seconds 0.0.0.0:49->49/tcp tacplus</span></span>
+                        </div>
+                    </div>
+
+                    <p>Also confirm port 49 is listening:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>ss -tunlp | grep 49</code></pre>
+                    </div>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-output">tcp LISTEN 0 4096 0.0.0.0:49 0.0.0.0:*
+                                    users:(("docker-proxy",pid=20329,fd=8))</span></span>
+                            <span class="t-line"><span class="t-output">tcp LISTEN 0 4096 [::]:49 [::]:*
+                                    users:(("docker-proxy",pid=20334,fd=8))</span></span>
+                        </div>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ Both IPs <code>0.0.0.0:49</code> and <code>[::]:49</code> listening means the server is
+                            accepting connections on all interfaces.</p>
+                    </div>
+
+                    <!-- STEP 8 — LOGS -->
+                    <h2 id="view-logs">Step 8 — View Live Authentication Logs</h2>
+
+                    <p>Since the log directory is mounted to the host, you can tail logs directly without going inside
+                        the container:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>tail -f /var/log/tacacs/tac_plus.log</code></pre>
+                    </div>
+
+                    <p>When the server starts and when users authenticate, you will see entries like this:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost — /var/log/tacacs/tac_plus.log</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-output">Sat Jun 6 08:24:48 2026 [7]: Reading
+                                    config</span></span>
+                            <span class="t-line"><span class="t-output">Sat Jun 6 08:24:48 2026 [7]: Version F4.0.4.27a
+                                    Initialized 1</span></span>
+                            <span class="t-line"><span class="t-output">Sat Jun 6 08:24:48 2026 [7]: tac_plus server
+                                    F4.0.4.27a starting</span></span>
+                            <span class="t-line"><span class="t-output">Sat Jun 6 08:24:48 2026 [7]: socket FD 4 AF
+                                    2</span></span>
+                            <span class="t-line"><span class="t-highlight">Sat Jun 6 08:30:12 2026 [7]: connect from
+                                    172.16.0.65</span></span>
+                            <span class="t-line"><span class="t-highlight">Sat Jun 6 08:30:12 2026 [7]: login query for
+                                    'chap_user' from 172.16.0.65 accepted</span></span>
+                        </div>
+                    </div>
+
+                    <p>Alternatively, view logs from inside the container:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker exec -it tacplus tail -f /var/log/tac_plus.log</code></pre>
+                    </div>
+
+                    <!-- STEP 9 — AUTO RESTART -->
+                    <h2 id="auto-restart">Step 9 — Enable Auto-Restart on Reboot</h2>
+
+                    <p>By default the container will not start automatically after a VM reboot. Fix this with:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker update --restart=always tacplus</code></pre>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ Your TACACS+ server will now automatically restart whenever the Rocky Linux VM reboots.</p>
+                    </div>
+
+                    <!-- DAY TO DAY -->
+                    <h2 id="day-to-day">Day-to-Day Operations</h2>
+
+                    <p>Common commands you'll use regularly:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Command</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Check if container is running</td>
+                                <td><code>docker ps | grep tacplus</code></td>
+                            </tr>
+                            <tr>
+                                <td>View live logs from host</td>
+                                <td><code>tail -f /var/log/tacacs/tac_plus.log</code></td>
+                            </tr>
+                            <tr>
+                                <td>Add or edit a user</td>
+                                <td><code>vi /home/haltdos/tacplus_image/tac_plus.conf</code></td>
+                            </tr>
+                            <tr>
+                                <td>Apply config changes</td>
+                                <td><code>docker restart tacplus</code></td>
+                            </tr>
+                            <tr>
+                                <td>Stop the container</td>
+                                <td><code>docker stop tacplus</code></td>
+                            </tr>
+                            <tr>
+                                <td>Remove and re-run container</td>
+                                <td><code>docker rm -f tacplus</code> then re-run the <code>docker run</code> command
+                                    from Step 6</td>
+                            </tr>
+                            <tr>
+                                <td>View all log files in container</td>
+                                <td><code>docker exec -it tacplus ls /var/log/</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Always run <code>docker rm -f tacplus</code> before re-running
+                                <code>docker run</code></strong> — otherwise Docker will error with "name already in
+                            use". After editing <code>tac_plus.conf</code>, always run
+                            <code>docker restart tacplus</code> to apply the changes.</p>
+                    </div>
+
+                    <!-- QUICK SUMMARY -->
+                    <h2 id="summary">Quick Setup Summary</h2>
+
+                    <p>The complete setup in one place — run these in order on a fresh Rocky Linux VM:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code># 1. Install Docker
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io
+sudo systemctl enable --now docker
+
+# 2. Clone repo
+cd /home/haltdos
+git clone https://github.com/llima3000/tacplus_image
+cd tacplus_image
+
+# 3. Build image
+docker build --no-cache -t tacplus .
+
+# 4. Create config (edit users as needed)
+cat > /home/haltdos/tacplus_image/tac_plus.conf << 'EOF'
+key = tacacs123
+accounting file = /var/log/tac_plus.log
+
+group = netadmin {
+    default service = permit
+    service = exec { priv-lvl = 15 }
+}
+
+user = tacadmin {
+    member = netadmin
+    login  = cleartext "tacadmin123"
+    chap   = cleartext "tacadmin123"
+}
+EOF
+
+# 5. Open firewall port
+sudo firewall-cmd --permanent --add-port=49/tcp
+sudo firewall-cmd --reload
+
+# 6. Run container
+docker run -d \
+  --name tacplus \
+  -p 49:49 \
+  -v /home/haltdos/tacplus_image/tac_plus.conf:/etc/tacacs+/tac_plus.conf \
+  -v /var/log/tacacs:/var/log \
+  tacplus
+
+# 7. Enable auto-restart
+docker update --restart=always tacplus
+
+# 8. Watch logs
+tail -f /var/log/tacacs/tac_plus.log</code></pre>
+                    </div>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="tacacs-chap-login.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">TACACS CHAP Login Guide</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="vercel-waf-onboarding.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Vercel WAF Onboarding</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · TACACS+ Server Setup on Rocky Linux</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'TACACS+ Server Setup Rocky Linux', icon: '🖥️', status: 'done', desc: 'Setup TACACS+ server on Rocky Linux using Docker', href: 'tacacs-server-setup-rocky.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+                { title: 'Webhook Testing Guide', icon: '🪝', status: 'done', desc: 'Step-by-step webhook verification using webhook.site', href: 'webhook-testing-guide.html' },
+            ];
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next); localStorage.setItem('hd-theme', next); updateThemeUI(next);
+            });
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => { bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item'; a.href = '#' + h.id; a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            document.querySelectorAll('.doc-content h2').forEach(h => {
+                new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) {
+                            toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                            const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                            if (a) a.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-10% 0px -80% 0px' }).observe(h);
+            });
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied'); btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+            const overlay = document.getElementById('searchOverlay'), searchInput = document.getElementById('searchInput'), searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
+
+</body>
+
+</html>
