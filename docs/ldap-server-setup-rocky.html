@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LDAP Server Setup on Rocky Linux · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html"><span class="nav-item-icon">⚙️</span>Binary
+                    Components Upload<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-server-setup-rocky.html"><span class="nav-item-icon">🖥️</span>TACACS+
+                    Server Setup<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item active" href="ldap-server-setup-rocky.html"><span class="nav-item-icon">📂</span>LDAP
+                    Server Setup<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Testing</div>
+                <a class="nav-item" href="webhook-testing-guide.html"><span class="nav-item-icon">🪝</span>Webhook
+                    Testing Guide<span class="nav-item-tag done">Done</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Configuration</span>
+                <span class="sep">›</span>
+                <span class="current">LDAP Server Setup on Rocky Linux</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>LDAP Server Setup on Rocky Linux</h1>
+                    <div class="doc-meta">
+                        Haltdos · Configuration &nbsp;·&nbsp; Rocky Linux 9 &nbsp;·&nbsp; Last updated June 2026
+                        &nbsp;·&nbsp; 12 min read
+                    </div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        This guide walks through setting up a 389 Directory Server (LDAP) on
+                        Rocky Linux 9 and configuring the Haltdos platform to authenticate
+                        users against it. By the end you will have a running LDAP server
+                        with a test user that can log into Haltdos.
+                    </p>
+
+                    <!-- ARCHITECTURE -->
+                    <h2 id="architecture">Architecture</h2>
+
+                    <div class="flow-diagram">
+                        <div class="flow-row">
+                            <div class="flow-box user">👤 User</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-box waf">🛡 Haltdos Platform<br /><small>10.0.0.160</small></div>
+                        </div>
+                        <div class="flow-row" style="margin-left:20px">
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-label">LDAP bind request · port 389</div>
+                        </div>
+                        <div class="flow-row">
+                            <div class="flow-box vercel">📂 389 Directory Server<br /><small>172.16.0.18</small></div>
+                            <div class="flow-label">authenticates user and returns result</div>
+                        </div>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ All commands in this guide run on the <strong>Rocky Linux VM</strong>
+                            (<code>172.16.0.18</code>) unless stated otherwise. Run as <code>root</code> or with
+                            <code>sudo</code>. Replace IPs with your actual values if different.</p>
+                    </div>
+
+                    <!-- PREREQUISITES -->
+                    <h2 id="prerequisites">Prerequisites</h2>
+                    <ul>
+                        <li>Rocky Linux 9 VM — this guide uses IP <code>172.16.0.18</code></li>
+                        <li>Haltdos platform running — this guide uses IP <code>10.0.0.160</code></li>
+                        <li>Both VMs can reach each other on the network</li>
+                        <li>Root or sudo access on the Rocky Linux VM</li>
+                    </ul>
+
+                    <div class="callout info">
+                        <p>💡 <strong>Why 389 Directory Server?</strong> The standard <code>openldap-servers</code>
+                            package was removed from Rocky Linux 9 default repos. 389 DS is the Red Hat-maintained
+                            replacement — it's fully supported, available by default, and has no extra repo needed.</p>
+                    </div>
+
+                    <!-- STEP 1 -->
+                    <h2 id="install">Step 1 — Install 389 Directory Server</h2>
+
+                    <p>Install directly from the default Rocky Linux 9 AppStream repo — no extra repositories needed:
+                    </p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>dnf install -y 389-ds-base</code></pre>
+                    </div>
+
+                    <p>When complete you should see <code>Complete!</code> at the bottom of the output.</p>
+
+                    <!-- STEP 2 -->
+                    <h2 id="create-instance">Step 2 — Create the Directory Server Instance</h2>
+
+                    <p>389 DS uses an interactive setup tool called <code>dscreate</code>. Run it and answer each prompt
+                        as shown below:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>dscreate interactive</code></pre>
+                    </div>
+
+                    <p>Answer each prompt exactly like this:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt</th>
+                                <th>What to enter</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Enter system's hostname</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>localhost.localdomain</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter the instance name</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>localhost</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter port number</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>389</code></td>
+                            </tr>
+                            <tr>
+                                <td>Create self-signed certificate database</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>yes</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter secure port number</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>636</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter Directory Manager DN</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>cn=Directory Manager</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter the Directory Manager password</td>
+                                <td><code>Test#123</code></td>
+                                <td>This is your admin password — remember it</td>
+                            </tr>
+                            <tr>
+                                <td>Confirm the Directory Manager password</td>
+                                <td><code>Test#123</code></td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>Choose whether mdb or bdb is used</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>bdb</code></td>
+                            </tr>
+                            <tr>
+                                <td>Enter the database suffix</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>dc=localhost,dc=localdomain</code></td>
+                            </tr>
+                            <tr>
+                                <td>Create sample entries in the suffix</td>
+                                <td><code>yes</code></td>
+                                <td>Type <code>yes</code> — creates the <code>ou=People</code> structure automatically
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Do you want to start the instance after the installation?</td>
+                                <td>Press <kbd>Enter</kbd></td>
+                                <td>Accept default — <code>yes</code></td>
+                            </tr>
+                            <tr>
+                                <td>Are you ready to install?</td>
+                                <td><code>yes</code></td>
+                                <td>Type <code>yes</code> to begin</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>When complete you will see:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-output">Starting installation ...</span>
+                            <span class="t-output">Validate installation settings ...</span>
+                            <span class="t-output">Create file system structures ...</span>
+                            <span class="t-output">Create self-signed certificate database ...</span>
+                            <span class="t-output">Perform SELinux labeling ...</span>
+                            <span class="t-output">Create database backend: dc=localhost,dc=localdomain ...</span>
+                            <span class="t-output">Perform post-installation tasks ...</span>
+                            <span class="t-highlight">Completed installation for instance: slapd-localhost</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <h2 id="verify-service">Step 3 — Verify the Service is Running</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>systemctl status dirsrv@localhost</code></pre>
+                    </div>
+
+                    <p>You should see <code>Active: active (running)</code> and these key lines confirming both ports
+                        are open:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-highlight">Active: active (running)</span></span>
+                            <span class="t-line"><span class="t-highlight">Status: "slapd started: Ready to process
+                                    requests"</span></span>
+                            <span class="t-output">Listening on All Interfaces port 389 for LDAP requests</span>
+                            <span class="t-output">Listening on All Interfaces port 636 for LDAPS requests</span>
+                        </div>
+                    </div>
+
+                    <p>Press <kbd>q</kbd> to exit the status view.</p>
+
+                    <div class="callout success">
+                        <p>✅ Both port 389 (LDAP) and port 636 (LDAPS) are listening on all interfaces — the server is
+                            ready.</p>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <h2 id="add-user">Step 4 — Add a Test User</h2>
+
+                    <p>Create a user LDIF file and add it to the directory:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat > /tmp/testuser.ldif << 'EOF'
+dn: uid=testuser,ou=People,dc=localhost,dc=localdomain
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Test User
+sn: User
+uid: testuser
+userPassword: Test#123
+EOF</code></pre>
+                    </div>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>ldapadd -x -D "cn=Directory Manager" -w "Test#123" -H ldap://localhost -f /tmp/testuser.ldif</code></pre>
+                    </div>
+
+                    <p>Expected output:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-highlight">adding new entry
+                                "uid=testuser,ou=People,dc=localhost,dc=localdomain"</span>
+                        </div>
+                    </div>
+
+                    <p>Verify the user was added correctly:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>ldapsearch -x -D "cn=Directory Manager" -w "Test#123" -H ldap://localhost -b "dc=localhost,dc=localdomain" "(uid=testuser)"</code></pre>
+                    </div>
+
+                    <p>You should see <code>numEntries: 1</code> and the user details returned.</p>
+
+                    <!-- STEP 5 -->
+                    <h2 id="fix-aci">Step 5 — Fix Read Permissions (ACI)</h2>
+
+                    <p>By default 389 DS restricts directory searches to admin only. Without this step, Haltdos will
+                        connect but fail to find the user. Add a read ACI that allows authenticated users to search the
+                        directory:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>ldapmodify -x -D "cn=Directory Manager" -w "Test#123" -H ldap://localhost << 'EOF'
+dn: dc=localhost,dc=localdomain
+changetype: modify
+add: aci
+aci: (targetattr="*")(version 3.0; acl "Allow all read"; allow (read,search,compare) userdn="ldap:///anyone";)
+EOF</code></pre>
+                    </div>
+
+                    <p>Expected output: <code>modifying entry "dc=localhost,dc=localdomain"</code></p>
+
+                    <div class="callout danger">
+                        <p>🚨 <strong>This is the most critical step.</strong> Without this ACI, Haltdos will show
+                            <code>authentication failed / Invalid user</code> in its logs even though the LDAP server is
+                            reachable and the user exists. The connection succeeds but the search returns 0 entries
+                            because the user has no permission to read their own entry.</p>
+                    </div>
+
+                    <!-- STEP 6 -->
+                    <h2 id="firewall">Step 6 — Open the Firewall</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>firewall-cmd --permanent --add-service=ldap
+firewall-cmd --reload
+firewall-cmd --list-services</code></pre>
+                    </div>
+
+                    <p>Verify <code>ldap</code> appears in the listed services output:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-output">success</span>
+                            <span class="t-output">success</span>
+                            <span class="t-highlight">cockpit dhcpv6-client ldap ssh</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 7 -->
+                    <h2 id="verify-connectivity">Step 7 — Verify Connectivity from Haltdos</h2>
+
+                    <p>Run these commands from the <strong>Haltdos machine</strong> (<code>10.0.0.160</code>) to confirm
+                        it can reach and search the LDAP server.</p>
+
+                    <p>First install ldap clients on the Haltdos machine if not already present:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>dnf install -y openldap-clients</code></pre>
+                    </div>
+
+                    <p>Then verify the connection:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>curl -v ldap://172.16.0.18:389</code></pre>
+                    </div>
+
+                    <p>Then verify the user is searchable as themselves — this simulates exactly what Haltdos does
+                        during login:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>ldapsearch -x -H ldap://172.16.0.18 \
+  -D "uid=testuser,ou=People,dc=localhost,dc=localdomain" \
+  -w "Test#123" \
+  -b "ou=People,dc=localhost,dc=localdomain" \
+  "(uid=testuser)"</code></pre>
+                    </div>
+
+                    <p>You must see <code>numEntries: 1</code> — if you see <code>numEntries: 0</code> go back and
+                        repeat Step 5.</p>
+
+                    <div class="callout success">
+                        <p>✅ <code>numEntries: 1</code> means the LDAP server is reachable, the user exists, and the
+                            permissions are correct. Haltdos will now be able to authenticate this user.</p>
+                    </div>
+
+                    <!-- STEP 8 -->
+                    <h2 id="haltdos-config">Step 8 — Configure LDAP in Haltdos UI</h2>
+
+                    <p>Log into the Haltdos dashboard and navigate to:</p>
+
+                    <div class="nav-path">🗂 System <span>›</span> Integration <span>›</span> LDAP</div>
+
+                    <p>Fill in the configuration fields exactly as shown:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enabled</strong></td>
+                                <td><span class="toggle-on">Enabled</span></td>
+                                <td>Turn the toggle on</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Endpoint</strong></td>
+                                <td><code>ldap://172.16.0.18</code></td>
+                                <td>IP of your Rocky Linux LDAP VM</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Domain</strong></td>
+                                <td><code>localhost.localdomain</code></td>
+                                <td>Matches the suffix set during <code>dscreate</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>RootDN</strong></td>
+                                <td><code>ou=People,dc=localhost,dc=localdomain</code></td>
+                                <td>The OU where users live — do NOT use AD-style <code>CN=Users</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>User ID Attribute</strong></td>
+                                <td><code>uid</code></td>
+                                <td>Matches the attribute used in the user LDIF</td>
+                            </tr>
+                            <tr>
+                                <td><strong>User Object Class</strong></td>
+                                <td><code>inetOrgPerson</code></td>
+                                <td>Matches the objectClass used in the user LDIF</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Group Member Attribute</strong></td>
+                                <td><code>member</code></td>
+                                <td>Use <code>member</code> not <code>memberOf</code> — 389 DS uses
+                                    <code>groupOfNames</code> style</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Click <strong>Save Changes</strong>.</p>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>RootDN is not the admin DN.</strong> It is the search base — where Haltdos looks
+                            for users. Setting it to <code>cn=admin,dc=...</code> will cause login to fail. It must be
+                            <code>ou=People,dc=localhost,dc=localdomain</code>.</p>
+                    </div>
+
+                    <!-- STEP 9 -->
+                    <h2 id="test-login">Step 9 — Test the Login</h2>
+
+                    <p>Log out from the current Haltdos session, then log in with:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Username</strong></td>
+                                <td><code>testuser</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Password</strong></td>
+                                <td><code>Test#123</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout success">
+                        <p>✅ If login succeeds — your LDAP integration is fully working end-to-end.</p>
+                    </div>
+
+                    <!-- TROUBLESHOOTING -->
+                    <h2 id="troubleshooting">Troubleshooting</h2>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Symptom in Haltdos Logs</th>
+                                <th>Cause</th>
+                                <th>Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>authentication failed / Invalid user</code> — no LDAP connection attempt
+                                    visible</td>
+                                <td>Haltdos config is wrong — not even reaching the LDAP server</td>
+                                <td>Check the Endpoint URL, Domain, and RootDN fields in the Haltdos LDAP config</td>
+                            </tr>
+                            <tr>
+                                <td>Search returns <code>numEntries: 0</code> when searching as testuser</td>
+                                <td>ACI not applied — user has no permission to read directory</td>
+                                <td>Repeat Step 5 — apply the ACI on the LDAP server</td>
+                            </tr>
+                            <tr>
+                                <td><code>curl: Connection refused</code> on port 389</td>
+                                <td>Firewall blocking port 389</td>
+                                <td>Repeat Step 6 — open the ldap firewall service</td>
+                            </tr>
+                            <tr>
+                                <td>Search works from LDAP VM but not from Haltdos machine</td>
+                                <td>389 DS only bound to localhost, not external interface</td>
+                                <td>Run <code>ss -tlnp | grep 389</code> — should show <code>*:389</code> not
+                                    <code>127.0.0.1:389</code></td>
+                            </tr>
+                            <tr>
+                                <td>Login fails even after ACI fix</td>
+                                <td>Wrong RootDN in Haltdos UI</td>
+                                <td>RootDN must be <code>ou=People,dc=localhost,dc=localdomain</code> — not the admin DN
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- QUICK REFERENCE -->
+                    <h2 id="quick-reference">Quick Reference — All Commands</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code># 1. Install 389 DS (on Rocky Linux 9 VM)
+dnf install -y 389-ds-base
+
+# 2. Create instance (interactive — follow prompts above)
+dscreate interactive
+
+# 3. Verify service
+systemctl status dirsrv@localhost
+
+# 4. Create test user LDIF
+cat > /tmp/testuser.ldif << 'EOF'
+dn: uid=testuser,ou=People,dc=localhost,dc=localdomain
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Test User
+sn: User
+uid: testuser
+userPassword: Test#123
+EOF
+
+# 5. Add user to directory
+ldapadd -x -D "cn=Directory Manager" -w "Test#123" -H ldap://localhost -f /tmp/testuser.ldif
+
+# 6. Fix read permissions (CRITICAL)
+ldapmodify -x -D "cn=Directory Manager" -w "Test#123" -H ldap://localhost << 'EOF'
+dn: dc=localhost,dc=localdomain
+changetype: modify
+add: aci
+aci: (targetattr="*")(version 3.0; acl "Allow all read"; allow (read,search,compare) userdn="ldap:///anyone";)
+EOF
+
+# 7. Open firewall
+firewall-cmd --permanent --add-service=ldap
+firewall-cmd --reload
+
+# 8. Verify from Haltdos machine (run on 10.0.0.160)
+ldapsearch -x -H ldap://172.16.0.18 \
+  -D "uid=testuser,ou=People,dc=localhost,dc=localdomain" \
+  -w "Test#123" \
+  -b "ou=People,dc=localhost,dc=localdomain" \
+  "(uid=testuser)"
+# Must show numEntries: 1</code></pre>
+                    </div>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="tacacs-server-setup-rocky.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">TACACS+ Server Setup</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="vercel-waf-onboarding.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Vercel WAF Onboarding</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · LDAP Server Setup on Rocky Linux</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'TACACS+ Server Setup Rocky Linux', icon: '🖥️', status: 'done', desc: 'Setup TACACS+ server on Rocky Linux using Docker', href: 'tacacs-server-setup-rocky.html' },
+                { title: 'LDAP Server Setup Rocky Linux', icon: '📂', status: 'done', desc: 'Setup 389 Directory Server and integrate with Haltdos', href: 'ldap-server-setup-rocky.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+                { title: 'Webhook Testing Guide', icon: '🪝', status: 'done', desc: 'Step-by-step webhook verification using webhook.site', href: 'webhook-testing-guide.html' },
+            ];
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next); localStorage.setItem('hd-theme', next); updateThemeUI(next);
+            });
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => { bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item'; a.href = '#' + h.id; a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            document.querySelectorAll('.doc-content h2').forEach(h => {
+                new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) {
+                            toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                            const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                            if (a) a.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-10% 0px -80% 0px' }).observe(h);
+            });
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied'); btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+            const overlay = document.getElementById('searchOverlay'), searchInput = document.getElementById('searchInput'), searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
+
+</body>
+
+</html>
