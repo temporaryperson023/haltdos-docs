@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RADIUS Server Setup on Rocky Linux · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html"><span class="nav-item-icon">⚙️</span>Binary
+                    Components Upload<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-server-setup-rocky.html"><span class="nav-item-icon">🖥️</span>TACACS+
+                    Server Setup<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item active" href="radius-server-setup-rocky.html"><span
+                        class="nav-item-icon">📡</span>RADIUS Server Setup<span
+                        class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Testing</div>
+                <a class="nav-item" href="webhook-testing-guide.html"><span class="nav-item-icon">🪝</span>Webhook
+                    Testing Guide<span class="nav-item-tag done">Done</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Configuration</span>
+                <span class="sep">›</span>
+                <span class="current">RADIUS Server Setup on Rocky Linux</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>RADIUS Server Setup on Rocky Linux</h1>
+                    <div class="doc-meta">
+                        Haltdos · Configuration &nbsp;·&nbsp; Rocky Linux / RHEL &nbsp;·&nbsp; Last updated June 2026
+                        &nbsp;·&nbsp; 10 min read
+                    </div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        This guide walks through setting up a FreeRADIUS authentication server on Rocky Linux
+                        using Docker Compose. By the end you will have a running FreeRADIUS container with
+                        live log monitoring, users configured, and the Haltdos platform authenticated against it.
+                    </p>
+
+                    <div class="callout warning">
+                        <p>⚠️ All commands in this guide must be run as <strong>root</strong> or with <code>sudo</code>.
+                            The user home directory used throughout is <code>/home/haltdos</code> — replace this with
+                            your actual username if different.</p>
+                    </div>
+
+                    <!-- PREREQUISITES -->
+                    <h2 id="prerequisites">Prerequisites</h2>
+
+                    <ul>
+                        <li>Rocky Linux VM (or RHEL / CentOS equivalent) — this guide uses IP <code>172.16.0.17</code>
+                        </li>
+                        <li>Internet access on the VM to pull Docker packages and the FreeRADIUS image</li>
+                        <li>A user account — this guide uses <code>haltdos</code> as the username</li>
+                        <li>The Haltdos platform installed and reachable on the same network</li>
+                    </ul>
+
+                    <!-- STEP 1 — DOCKER -->
+                    <h2 id="install-docker">Step 1 — Install Docker</h2>
+
+                    <p>Add the Docker CE repository and install Docker along with the Compose plugin:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo dnf install -y dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+newgrp docker</code></pre>
+                    </div>
+
+                    <p>Verify Docker is running:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>docker --version
+sudo systemctl status docker</code></pre>
+                    </div>
+
+                    <div class="callout info">
+                        <p>💡 <code>docker-compose-plugin</code> is the modern replacement for the standalone
+                            <code>docker-compose</code> binary. All compose commands in this guide use
+                            <code>docker compose</code> (with a space, not a hyphen).
+                        </p>
+                    </div>
+
+                    <!-- STEP 2 — PROJECT STRUCTURE -->
+                    <h2 id="project-structure">Step 2 — Create the Project Structure</h2>
+
+                    <p>Create the working directory under the <code>haltdos</code> home folder:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>mkdir -p /home/haltdos/freeradius-docker/config
+cd /home/haltdos/freeradius-docker</code></pre>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Important path note:</strong> Always create and run from
+                            <code>/home/haltdos/freeradius-docker/</code>. Do NOT work inside <code>/root</code> —
+                            if you accidentally create files there, move them with
+                            <code>mv /root/freeradius-docker /home/haltdos/freeradius-docker</code> and fix ownership
+                            with <code>chown -R haltdos:haltdos /home/haltdos/freeradius-docker</code>.
+                        </p>
+                    </div>
+
+                    <!-- STEP 3 — CONFIG FILES -->
+                    <h2 id="create-config">Step 3 — Create the Configuration Files</h2>
+
+                    <h3>clients.conf</h3>
+                    <p>This file defines which IP addresses are allowed to send authentication requests to the RADIUS
+                        server. You must include an entry for every client — the container itself, Docker's internal
+                        network, your VM network, and the Haltdos platform IP.</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat > /home/haltdos/freeradius-docker/config/clients.conf << 'EOF'
+client localhost {
+    ipaddr          = 127.0.0.1
+    secret          = radius123
+    nastype         = other
+    require_message_authenticator = false
+}
+
+client docker_internal {
+    ipaddr          = 172.18.0.0/16
+    secret          = radius123
+    nastype         = other
+    require_message_authenticator = false
+}
+
+client rocky_network {
+    ipaddr          = 172.16.0.0/24
+    secret          = radius123
+    shortname       = rocky-radius
+    nastype         = other
+    require_message_authenticator = false
+}
+
+client haltdos_platform {
+    ipaddr          = 10.0.0.160         # <- add the actual Haltdos platform IP here
+    secret          = radius123
+    shortname       = haltdos
+    nastype         = other
+    require_message_authenticator = false
+}
+EOF</code></pre>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ <strong>Unknown client errors:</strong> If you see
+                            <code>Ignoring request … from unknown client &lt;IP&gt;</code> in the logs, that IP is
+                            missing from <code>clients.conf</code>. Add a new client block for it and restart the
+                            container.
+                        </p>
+                    </div>
+
+                    <h3>users</h3>
+                    <p>This file defines the usernames and passwords FreeRADIUS will authenticate against:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat > /home/haltdos/freeradius-docker/config/users << 'EOF'
+radadmin    Cleartext-Password := "Test#123"
+            Reply-Message = "Login OK, %{User-Name}"
+
+kartik      Cleartext-Password := "Kartik#123"
+            Reply-Message = "Login OK, %{User-Name}"
+EOF</code></pre>
+                    </div>
+
+                    <h3>Config Fields Explained</h3>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ipaddr</code></td>
+                                <td>IP or CIDR</td>
+                                <td>The client IP or subnet allowed to send RADIUS requests. Use CIDR notation like
+                                    <code>172.16.0.0/24</code> to allow a whole subnet.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>secret</code></td>
+                                <td><code>radius123</code></td>
+                                <td>Shared secret between the RADIUS server and the client. Must match exactly on both
+                                    sides.</td>
+                            </tr>
+                            <tr>
+                                <td><code>nastype</code></td>
+                                <td><code>other</code></td>
+                                <td>Type of NAS device. Use <code>other</code> for generic clients like Haltdos.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Cleartext-Password</code></td>
+                                <td>Password string</td>
+                                <td>Plaintext password stored in the users file. FreeRADIUS compares this against the
+                                    password sent by the client.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Reply-Message</code></td>
+                                <td>String with <code>%{User-Name}</code></td>
+                                <td>Message returned to the client on successful authentication. The
+                                    <code>%{User-Name}</code> macro is replaced with the actual username.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- STEP 4 — COMPOSE FILE -->
+                    <h2 id="docker-compose">Step 4 — Create the Docker Compose File</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cat > /home/haltdos/freeradius-docker/docker-compose.yml << 'EOF'
+services:
+  freeradius:
+    image: freeradius/freeradius-server:latest
+    container_name: freeradius
+    restart: unless-stopped
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+    volumes:
+      - ./config/clients.conf:/etc/raddb/clients.conf
+      - ./config/users:/etc/raddb/users
+    command: freeradius -X
+    networks:
+      - radius-net
+
+networks:
+  radius-net:
+    driver: bridge
+EOF</code></pre>
+                    </div>
+
+                    <p>The key settings in this file:</p>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Setting</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>1812:1812/udp</code></td>
+                                <td>Port mapping</td>
+                                <td>RADIUS authentication port. UDP is required — TCP will not work.</td>
+                            </tr>
+                            <tr>
+                                <td><code>1813:1813/udp</code></td>
+                                <td>Port mapping</td>
+                                <td>RADIUS accounting port.</td>
+                            </tr>
+                            <tr>
+                                <td><code>./config/clients.conf:/etc/raddb/clients.conf</code></td>
+                                <td>Volume mount</td>
+                                <td>Mounts your clients file into the container, overriding the default.</td>
+                            </tr>
+                            <tr>
+                                <td><code>./config/users:/etc/raddb/users</code></td>
+                                <td>Volume mount</td>
+                                <td>Mounts your users file into the container.</td>
+                            </tr>
+                            <tr>
+                                <td><code>freeradius -X</code></td>
+                                <td>Command</td>
+                                <td>Runs FreeRADIUS in debug mode so all activity appears in <code>docker logs</code>.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>restart: unless-stopped</code></td>
+                                <td>Restart policy</td>
+                                <td>Container restarts automatically on reboot or crash unless you manually stop it.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- STEP 5 — FIREWALL -->
+                    <h2 id="firewall">Step 5 — Open Firewall Ports</h2>
+
+                    <p>RADIUS uses UDP ports 1812 (auth) and 1813 (accounting). Open both permanently:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo firewall-cmd --permanent --add-port=1812/udp
+sudo firewall-cmd --permanent --add-port=1813/udp
+sudo firewall-cmd --reload</code></pre>
+                    </div>
+
+                    <p>All three commands should return <code>success</code>. If you see
+                        <code>ALREADY_ENABLED</code> warnings that is fine — the ports are already open.
+                    </p>
+
+                    <!-- STEP 6 — START -->
+                    <h2 id="start-container">Step 6 — Start the Container</h2>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>cd /home/haltdos/freeradius-docker
+sudo docker compose up -d
+sudo docker ps</code></pre>
+                    </div>
+
+                    <p>You should see output like this:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-prompt">root@localhost:~#</span> <span
+                                    class="t-cmd">sudo docker ps</span></span>
+                            <span class="t-line"><span class="t-highlight">200cb69d5644
+                                    freeradius/freeradius-server:latest "/docker-entrypoint.…" 1 second ago Up Less than
+                                    a second 0.0.0.0:1812-1813->1812-1813/udp freeradius</span></span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 7 — TEST LOCALLY -->
+                    <h2 id="test-local">Step 7 — Test Authentication Locally</h2>
+
+                    <p>Run <code>radtest</code> from inside the container to verify both users authenticate
+                        correctly:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo docker exec -it freeradius radtest radadmin "Test#123" 127.0.0.1 0 radius123
+sudo docker exec -it freeradius radtest kartik "Kartik#123" 127.0.0.1 0 radius123</code></pre>
+                    </div>
+
+                    <p>A successful response looks like this:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-output">Sent Access-Request Id 0 from 0.0.0.0:53509 to
+                                    127.0.0.1:1812 length 78</span></span>
+                            <span class="t-line"><span class="t-output"> User-Name = "radadmin"</span></span>
+                            <span class="t-line"><span class="t-output"> User-Password = &lt;&lt;&lt; secret
+                                    &gt;&gt;&gt;</span></span>
+                            <span class="t-line"><span class="t-highlight">Received Access-Accept Id 0 from
+                                    127.0.0.1:1812 to 127.0.0.1:53509 length 58</span></span>
+                            <span class="t-line"><span class="t-highlight"> Reply-Message = "Login OK,
+                                    radadmin"</span></span>
+                        </div>
+                    </div>
+
+                    <div class="callout success">
+                        <p>✅ <strong>Access-Accept</strong> means authentication succeeded. If you see
+                            <strong>Access-Reject</strong> or <strong>No reply from server</strong>, see the
+                            Troubleshooting section below.
+                        </p>
+                    </div>
+
+                    <!-- STEP 8 — VIEW LOGS -->
+                    <h2 id="view-logs">Step 8 — View Live Authentication Logs</h2>
+
+                    <p>Since FreeRADIUS runs in debug mode (<code>-X</code>), all output goes to stdout and is
+                        accessible via Docker logs. This is the equivalent of <code>tail -f</code> for this setup:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo docker logs -f freeradius</code></pre>
+                    </div>
+
+                    <p>When a user authenticates successfully from the Haltdos platform you will see entries like
+                        this:</p>
+
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">bash — root@localhost — docker logs freeradius</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-output">(0) Received Access-Request Id 4 from
+                                    10.0.0.160:38217 to 172.18.0.2:1812 length 65</span></span>
+                            <span class="t-line"><span class="t-output">(0) User-Name = "kartik"</span></span>
+                            <span class="t-line"><span class="t-output">(0) chap: CHAP user "kartik" authenticated
+                                    successfully</span></span>
+                            <span class="t-line"><span class="t-highlight">(0) Sent Access-Accept Id 4 from
+                                    172.18.0.2:1812 to 10.0.0.160:38217 length 56</span></span>
+                            <span class="t-line"><span class="t-highlight">(0) Reply-Message = "Login OK,
+                                    kartik"</span></span>
+                        </div>
+                    </div>
+
+                    <p>To view logs from inside the container file system directly:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo docker exec -it freeradius tail -f /var/log/freeradius/radius.log</code></pre>
+                    </div>
+
+                    <!-- TROUBLESHOOTING -->
+                    <h2 id="troubleshooting">Troubleshooting</h2>
+
+                    <h3>No reply from server</h3>
+                    <p>The most common cause is a missing client entry. The container's internal IP
+                        (<code>172.18.0.x</code>) must be in <code>clients.conf</code>. Make sure the
+                        <code>docker_internal</code> block covers <code>172.18.0.0/16</code>, then restart:
+                    </p>
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code>sudo docker compose restart</code></pre>
+                    </div>
+
+                    <h3>Ignoring request from unknown client &lt;IP&gt;</h3>
+                    <p>That IP is not in <code>clients.conf</code>. Add a new client block for it, save the file,
+                        and restart the container. Common missing IPs are the Haltdos platform address
+                        (<code>10.0.0.160</code> in this setup) or a new VM on the network.</p>
+
+                    <h3>BlastRADIUS warnings</h3>
+                    <p>You may see warnings like:</p>
+                    <div class="terminal">
+                        <div class="terminal-bar">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot amber"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">FreeRADIUS warning</span>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"><span class="t-output">The packet does not contain
+                                    Message-Authenticator, which is a security issue.</span></span>
+                            <span class="t-line"><span class="t-output">UPGRADE CLIENT haltdos AS YOUR NETWORK MAY BE
+                                    VULNERABLE TO THE BLASTRADIUS ATTACK.</span></span>
+                        </div>
+                    </div>
+                    <p>These warnings appear because the Haltdos platform sends CHAP authentication requests without
+                        the <code>Message-Authenticator</code> attribute. In a controlled test environment this is
+                        acceptable. The authentication still succeeds — you will see <code>Access-Accept</code>
+                        in the same log output. For production deployments, upgrade the RADIUS client on the Haltdos
+                        side to include <code>Message-Authenticator</code>.</p>
+
+                    <h3>Access-Reject on correct credentials</h3>
+                    <p>Check that the password in the Haltdos RADIUS configuration matches exactly what is in the
+                        <code>users</code> file — including case. Also check that the shared <code>secret</code> in
+                        <code>clients.conf</code> matches the secret configured on the Haltdos platform side.
+                    </p>
+
+                    <!-- DAY-TO-DAY -->
+                    <h2 id="day-to-day">Day-to-Day Operations</h2>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Command</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Check if container is running</td>
+                                <td><code>sudo docker ps | grep freeradius</code></td>
+                            </tr>
+                            <tr>
+                                <td>View live logs</td>
+                                <td><code>sudo docker logs -f freeradius</code></td>
+                            </tr>
+                            <tr>
+                                <td>Add or edit a user</td>
+                                <td><code>vi /home/haltdos/freeradius-docker/config/users</code></td>
+                            </tr>
+                            <tr>
+                                <td>Add or edit a client IP</td>
+                                <td><code>vi /home/haltdos/freeradius-docker/config/clients.conf</code></td>
+                            </tr>
+                            <tr>
+                                <td>Apply config changes</td>
+                                <td><code>sudo docker compose restart</code> from the project folder</td>
+                            </tr>
+                            <tr>
+                                <td>Stop the container</td>
+                                <td><code>sudo docker compose down</code></td>
+                            </tr>
+                            <tr>
+                                <td>Start the container</td>
+                                <td><code>sudo docker compose up -d</code></td>
+                            </tr>
+                            <tr>
+                                <td>Test a user from inside the container</td>
+                                <td><code>sudo docker exec -it freeradius radtest &lt;user&gt; "&lt;password&gt;" 127.0.0.1 0 radius123</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>⚠️ Always run commands from inside <code>/home/haltdos/freeradius-docker/</code> so Docker
+                            Compose can find the <code>docker-compose.yml</code> file. After editing
+                            <code>clients.conf</code> or <code>users</code>, always run
+                            <code>sudo docker compose restart</code> to apply the changes.
+                        </p>
+                    </div>
+
+                    <!-- QUICK SUMMARY -->
+                    <h2 id="summary">Quick Setup Summary</h2>
+
+                    <p>The complete setup in one place — run these in order on a fresh Rocky Linux VM:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code># 1. Install Docker
+sudo dnf install -y dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl enable --now docker
+
+# 2. Create project structure
+mkdir -p /home/haltdos/freeradius-docker/config
+cd /home/haltdos/freeradius-docker
+
+# 3. Create clients.conf
+cat > config/clients.conf << 'EOF'
+client localhost {
+    ipaddr = 127.0.0.1
+    secret = radius123
+    nastype = other
+    require_message_authenticator = false
+}
+client docker_internal {
+    ipaddr = 172.18.0.0/16
+    secret = radius123
+    nastype = other
+    require_message_authenticator = false
+}
+client rocky_network {
+    ipaddr = 172.16.0.0/24
+    secret = radius123
+    shortname = rocky-radius
+    nastype = other
+    require_message_authenticator = false
+}
+client haltdos_platform {
+    ipaddr = 10.0.0.160
+    secret = radius123
+    shortname = haltdos
+    nastype = other
+    require_message_authenticator = false
+}
+EOF
+
+# 4. Create users file
+cat > config/users << 'EOF'
+radadmin    Cleartext-Password := "Test#123"
+            Reply-Message = "Login OK, %{User-Name}"
+
+kartik      Cleartext-Password := "Kartik#123"
+            Reply-Message = "Login OK, %{User-Name}"
+EOF
+
+# 5. Create docker-compose.yml
+cat > docker-compose.yml << 'EOF'
+services:
+  freeradius:
+    image: freeradius/freeradius-server:latest
+    container_name: freeradius
+    restart: unless-stopped
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+    volumes:
+      - ./config/clients.conf:/etc/raddb/clients.conf
+      - ./config/users:/etc/raddb/users
+    command: freeradius -X
+    networks:
+      - radius-net
+networks:
+  radius-net:
+    driver: bridge
+EOF
+
+# 6. Open firewall ports
+sudo firewall-cmd --permanent --add-port=1812/udp
+sudo firewall-cmd --permanent --add-port=1813/udp
+sudo firewall-cmd --reload
+
+# 7. Start container
+sudo docker compose up -d
+
+# 8. Test locally
+sudo docker exec -it freeradius radtest radadmin "Test#123" 127.0.0.1 0 radius123
+
+# 9. Watch live logs
+sudo docker logs -f freeradius</code></pre>
+                    </div>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="tacacs-server-setup-rocky.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">TACACS+ Server Setup on Rocky Linux</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="vercel-waf-onboarding.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Vercel WAF Onboarding</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · RADIUS Server Setup on Rocky Linux</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'TACACS+ Server Setup Rocky Linux', icon: '🖥️', status: 'done', desc: 'Setup TACACS+ server on Rocky Linux using Docker', href: 'tacacs-server-setup-rocky.html' },
+                { title: 'RADIUS Server Setup Rocky Linux', icon: '📡', status: 'done', desc: 'Setup FreeRADIUS server on Rocky Linux using Docker Compose', href: 'radius-server-setup-rocky.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+                { title: 'Webhook Testing Guide', icon: '🪝', status: 'done', desc: 'Step-by-step webhook verification using webhook.site', href: 'webhook-testing-guide.html' },
+            ];
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next); localStorage.setItem('hd-theme', next); updateThemeUI(next);
+            });
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => { bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item'; a.href = '#' + h.id; a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            document.querySelectorAll('.doc-content h2').forEach(h => {
+                new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) {
+                            toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                            const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                            if (a) a.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-10% 0px -80% 0px' }).observe(h);
+            });
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied'); btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+            const overlay = document.getElementById('searchOverlay'), searchInput = document.getElementById('searchInput'), searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
+
+</body>
+
+</html>
