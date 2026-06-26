@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MinIO S3 Backup Setup · Haltdos Docs</title>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-input-wrap">
+                <span class="search-input-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search documentation..."
+                    autocomplete="off" />
+                <span class="search-esc" id="searchClose">ESC</span>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+            <div class="search-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> open</span>
+                <span><kbd>ESC</kbd> close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="../index.html">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Haltdos <span>Docs</span></div>
+            </a>
+        </div>
+        <div class="sidebar-search">
+            <button class="sidebar-search-btn" id="sidebarSearchBtn">
+                <span class="search-icon">🔍</span>
+                Search docs...
+                <span class="sidebar-search-kbd">⌘K</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a class="nav-item" href="../index.html"><span class="nav-item-icon">🏠</span>Dashboard</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Build & Release</div>
+                <a class="nav-item" href="binary-components-upload.html"><span class="nav-item-icon">⚙️</span>Binary
+                    Components Upload<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="haltdos-installer.html"><span class="nav-item-icon">🛠️</span>Haltdos
+                    Installer<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="installer-methods.html"><span class="nav-item-icon">📦</span>Installation
+                    Methods<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a class="nav-item" href="email-integration.html"><span class="nav-item-icon">📧</span>Email
+                    Integration<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-chap-login.html"><span class="nav-item-icon">🔐</span>TACACS CHAP
+                    Login<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="tacacs-server-setup-rocky.html"><span class="nav-item-icon">🖥️</span>TACACS+
+                    Server Setup<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item" href="ldap-server-setup-rocky.html"><span class="nav-item-icon">📂</span>LDAP Server
+                    Setup<span class="nav-item-tag done">Done</span></a>
+                <a class="nav-item active" href="minio-s3-backup-setup.html"><span class="nav-item-icon">🗄️</span>MinIO
+                    S3 Backup Setup<span class="nav-item-tag done">Done</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">WAF</div>
+                <a class="nav-item" href="vercel-waf-onboarding.html"><span class="nav-item-icon">🛡️</span>Vercel WAF
+                    Onboarding<span class="nav-item-tag progress">In Progress</span></a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Testing</div>
+                <a class="nav-item" href="webhook-testing-guide.html"><span class="nav-item-icon">🪝</span>Webhook
+                    Testing Guide<span class="nav-item-tag done">Done</span></a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+                <span class="theme-toggle-label" id="themeLabel">Dark mode</span>
+                <div class="theme-toggle-pill"></div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <a href="../index.html">Haltdos Docs</a>
+                <span class="sep">›</span>
+                <span class="sep">Configuration</span>
+                <span class="sep">›</span>
+                <span class="current">MinIO S3 Backup Setup</span>
+            </div>
+            <button class="topbar-search-btn" id="topbarSearchBtn">
+                🔍 Search docs...
+                <span class="topbar-search-kbd">⌘K</span>
+            </button>
+        </header>
+
+        <div class="doc-layout">
+            <main class="doc-content-wrap">
+
+                <a class="back-btn" href="../index.html">← Back to Dashboard</a>
+
+                <div class="doc-header">
+                    <span class="tag done">Done</span>
+                    <h1>MinIO S3 Backup Setup for Haltdos</h1>
+                    <div class="doc-meta">
+                        Haltdos · Configuration &nbsp;·&nbsp; Rocky Linux 9 &nbsp;·&nbsp; Last updated June 2026
+                        &nbsp;·&nbsp; 15 min read
+                    </div>
+                </div>
+
+                <div class="doc-content" id="docContent">
+
+                    <p>
+                        This guide walks through setting up a self-hosted MinIO object
+                        storage server on Rocky Linux 9 (VMware) and connecting it to
+                        the Haltdos platform as an S3-compatible backup destination.
+                    </p>
+
+                    <!-- ARCHITECTURE -->
+                    <h2 id="architecture">Architecture</h2>
+
+                    <div class="flow-diagram">
+                        <div class="flow-row">
+                            <div class="flow-box waf">🛡 Haltdos Platform<br /><small>172.16.0.56</small></div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-label">S3 backup · HTTPS · port 9000</div>
+                        </div>
+                        <div class="flow-row" style="margin-left:20px">
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-label">Domain: minio.haltdos.local → 172.16.0.38</div>
+                        </div>
+                        <div class="flow-row">
+                            <div class="flow-box vercel">🗄️ MinIO Server<br /><small>172.16.0.38</small></div>
+                            <div class="flow-label">S3 API :9000 · Web Console :9001</div>
+                        </div>
+                    </div>
+
+                    <div class="callout warning">
+                        <p>⚠️ All commands in <strong>Part 1</strong> run on the <strong>MinIO VM</strong>
+                            (<code>172.16.0.38</code>). Commands in <strong>Part 2</strong> run on the <strong>Haltdos
+                                VM</strong> (<code>172.16.0.56</code>). Replace IPs with your actual values.</p>
+                    </div>
+
+                    <!-- IMPORTANT NOTES -->
+                    <h2 id="important-notes">Important Notes Before You Start</h2>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>HTTPS is mandatory</strong></td>
+                                <td>Haltdos strictly requires a valid HTTPS URL for the S3 endpoint. Plain
+                                    <code>http://</code> will be rejected with "Invalid URL specified".</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Private IPs are blocked</strong></td>
+                                <td>Haltdos blocks RFC1918 private IP ranges (<code>172.16.x.x</code>,
+                                    <code>10.x.x.x</code>, <code>192.168.x.x</code>) in the S3 URL field. You must use a
+                                    domain name instead.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Password special characters</strong></td>
+                                <td>Avoid <code>#</code> in passwords set via shell — the shell treats <code>#</code> as
+                                    a comment. Always wrap passwords containing <code>#</code> in double quotes in shell
+                                    commands and config files.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SELinux on Rocky Linux 9</strong></td>
+                                <td>Downloaded binaries need to be relabeled with <code>chcon -t bin_t</code> otherwise
+                                    systemd cannot execute them and MinIO will fail to start with a Permission denied
+                                    error.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- PART 1 - MINIO SETUP -->
+                    <h2 id="part1-minio">Part 1 — MinIO Setup on Rocky Linux 9</h2>
+
+                    <!-- STEP 1 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h3>Update System & Install Dependencies</h3>
+                        </div>
+                        <div class="step-body">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo dnf update -y
+sudo dnf install -y wget curl</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h3>Download & Install MinIO Binary</h3>
+                        </div>
+                        <div class="step-body">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>wget https://dl.min.io/server/minio/release/linux-amd64/minio
+sudo cp minio /usr/local/bin/
+sudo chmod +x /usr/local/bin/minio
+
+# Fix SELinux label — required on Rocky Linux 9
+sudo chcon -t bin_t /usr/local/bin/minio</code></pre>
+                            </div>
+                            <div class="callout danger">
+                                <p>🚨 <strong>Do not skip the SELinux relabel.</strong> Without
+                                    <code>chcon -t bin_t</code>, systemd will fail to start MinIO with
+                                    <code>status=203/EXEC</code> and "Permission denied" — even though the file has
+                                    execute permissions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h3>Create MinIO User & Data Directory</h3>
+                        </div>
+                        <div class="step-body">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo groupadd -r minio-user
+sudo useradd -m -r -g minio-user minio-user
+
+sudo mkdir -p /data/minio
+sudo chown -R minio-user:minio-user /data/minio</code></pre>
+                            </div>
+                            <div class="callout info">
+                                <p>💡 For production, mount a dedicated XFS-formatted disk at <code>/data/minio</code>.
+                                    For a test lab, the directory on the root disk works fine.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <h3>Create the Environment Config File</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Create <code>/etc/default/minio</code> with your credentials:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo vim /etc/default/minio</code></pre>
+                            </div>
+                            <p>Paste this content — note the password is quoted to handle special characters:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>MINIO_VOLUMES="/data/minio"
+MINIO_OPTS="--address :9000 --console-address :9001"
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD="Haltdos#123"</code></pre>
+                            </div>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo chown minio-user:minio-user /etc/default/minio
+sudo chmod 600 /etc/default/minio</code></pre>
+                            </div>
+                            <div class="callout warning">
+                                <p>⚠️ Always wrap the password value in <strong>double quotes</strong> in the config
+                                    file. Without quotes, the <code>#</code> character and everything after it is
+                                    treated as a comment — MinIO will read a truncated password and authentication will
+                                    fail.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <h3>Create the systemd Service File</h3>
+                        </div>
+                        <div class="step-body">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo vim /etc/systemd/system/minio.service</code></pre>
+                            </div>
+                            <p>Paste this content:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>[Unit]
+Description=MinIO Object Storage
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable=/usr/local/bin/minio
+
+[Service]
+WorkingDirectory=/usr/local/
+User=minio-user
+Group=minio-user
+EnvironmentFile=-/etc/default/minio
+ExecStart=/usr/local/bin/minio server $MINIO_OPTS $MINIO_VOLUMES
+Restart=always
+LimitNOFILE=65536
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+                            </div>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now minio.service
+sudo systemctl status minio.service</code></pre>
+                            </div>
+                            <p>Confirm these lines appear in the status output:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">bash — root@localhost (MinIO VM)</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">Active: active
+                                            (running)</span></span>
+                                    <span class="t-line"><span class="t-highlight">API: http://172.16.0.38:9000
+                                            http://127.0.0.1:9000</span></span>
+                                    <span class="t-line"><span class="t-highlight">WebUI: http://172.16.0.38:9001
+                                            http://127.0.0.1:9001</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 6 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">6</div>
+                            <h3>Open Firewall Ports</h3>
+                        </div>
+                        <div class="step-body">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>sudo firewall-cmd --permanent --add-port=9000/tcp
+sudo firewall-cmd --permanent --add-port=9001/tcp
+sudo firewall-cmd --reload</code></pre>
+                            </div>
+                            <p>Both commands should return <code>success</code>.</p>
+                        </div>
+                    </div>
+
+                    <!-- STEP 7 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">7</div>
+                            <h3>Install MinIO Client (mc) & Create Bucket + User</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Download the MinIO client and apply SELinux label:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>curl -sLO https://dl.min.io/client/mc/release/linux-amd64/mc
+sudo chmod +x mc
+sudo chcon -t bin_t mc
+sudo mv mc /usr/local/bin/</code></pre>
+                            </div>
+                            <p>Set an alias, create the backup bucket, and create a dedicated user for Haltdos:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code># Set alias — password in quotes to handle special characters
+mc alias set myminio http://localhost:9000 minioadmin "Haltdos#123"
+
+# Create the backup bucket
+mc mb myminio/haltdos-backup
+
+# Create dedicated user for Haltdos
+mc admin user add myminio haltdos-user "HaltdosSecret@123"
+
+# Assign read/write policy
+mc admin policy attach myminio readwrite --user haltdos-user
+
+# Verify
+mc ls myminio/
+mc admin user list myminio</code></pre>
+                            </div>
+                            <p>Expected output from <code>mc ls myminio/</code>:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">bash — root@localhost (MinIO VM)</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">[2026-06-18 06:19:57 EDT] 0B
+                                            haltdos-backup/</span></span>
+                                </div>
+                            </div>
+                            <div class="callout warning">
+                                <p>⚠️ If <code>mc alias set</code> fails with a signature mismatch error, check that the
+                                    password in <code>/etc/default/minio</code> is correctly quoted. Restart MinIO after
+                                    fixing it with <code>sudo systemctl restart minio.service</code> and try the alias
+                                    command again.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 8 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">8</div>
+                            <h3>Generate HTTPS Certificate for MinIO</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Haltdos requires HTTPS. Generate a self-signed certificate using MinIO's
+                                <code>certgen</code> tool. Include both the IP and the domain name you'll use:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code># Download certgen
+wget https://github.com/minio/certgen/releases/latest/download/certgen-linux-amd64
+chmod +x certgen-linux-amd64
+
+# Generate cert — include IP, localhost, and the domain name
+./certgen-linux-amd64 --host "127.0.0.1,localhost,172.16.0.38,minio.haltdos.local"
+
+# Create cert directory and move certs
+sudo mkdir -p /home/minio-user/.minio/certs
+sudo mv public.crt /home/minio-user/.minio/certs/
+sudo mv private.key /home/minio-user/.minio/certs/
+sudo chown -R minio-user:minio-user /home/minio-user/.minio/
+
+# Restart MinIO — it auto-detects certs and switches to HTTPS
+sudo systemctl restart minio.service
+sleep 3
+sudo systemctl status minio.service</code></pre>
+                            </div>
+                            <p>After restart, the status output should show <code>https://</code> instead of
+                                <code>http://</code>:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">bash — root@localhost (MinIO VM)</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">API: https://172.16.0.38:9000
+                                            https://127.0.0.1:9000</span></span>
+                                    <span class="t-line"><span class="t-highlight">WebUI: https://172.16.0.38:9001
+                                            https://127.0.0.1:9001</span></span>
+                                </div>
+                            </div>
+                            <div class="callout info">
+                                <p>💡 <strong>Why include the domain name in the cert?</strong> Haltdos blocks private
+                                    IPs like <code>172.16.x.x</code> in the S3 URL field. We use a domain name
+                                    (<code>minio.haltdos.local</code>) instead — the cert must include this domain in
+                                    its Subject Alternative Names (SAN) or the SSL handshake will fail.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PART 2 - HALTDOS VM -->
+                    <h2 id="part2-haltdos">Part 2 — Configure the Haltdos Machine</h2>
+
+                    <!-- STEP 9 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">9</div>
+                            <h3>Add Domain Entry on Haltdos VM</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Run these commands on the <strong>Haltdos machine</strong> (<code>172.16.0.56</code>).
+                                Add a local DNS entry so the domain resolves to the MinIO VM:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>echo "172.16.0.38  minio.haltdos.local" | sudo tee -a /etc/hosts</code></pre>
+                            </div>
+                            <p>Verify it resolves:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>ping minio.haltdos.local</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 10 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">10</div>
+                            <h3>Trust the MinIO Self-Signed Certificate</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Copy the MinIO cert from the MinIO VM and install it as a trusted CA on the Haltdos
+                                machine:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code># Copy cert from MinIO VM
+scp root@172.16.0.38:/home/minio-user/.minio/certs/public.crt /tmp/minio-selfsigned.crt
+
+# Install as trusted CA
+sudo cp /tmp/minio-selfsigned.crt /etc/pki/ca-trust/source/anchors/minio-selfsigned.crt
+sudo update-ca-trust</code></pre>
+                            </div>
+                            <p>Verify the cert is trusted — this must return <code>200 OK</code> without the
+                                <code>-k</code> flag:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>curl -v https://minio.haltdos.local:9000/minio/health/live</code></pre>
+                            </div>
+                            <p>Confirm you see both of these lines in the output:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">bash — root@testname (Haltdos VM)</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">* subjectAltName: host
+                                            "minio.haltdos.local" matched cert's "minio.haltdos.local"</span></span>
+                                    <span class="t-line"><span class="t-highlight">* SSL certificate verify
+                                            ok.</span></span>
+                                    <span class="t-line"><span class="t-highlight">&lt; HTTP/1.1 200 OK</span></span>
+                                    <span class="t-output"> Server: MinIO</span>
+                                </div>
+                            </div>
+                            <div class="callout success">
+                                <p>✅ <code>SSL certificate verify ok</code> and <code>HTTP/1.1 200 OK</code> without the
+                                    <code>-k</code> flag confirms the certificate is fully trusted on the Haltdos
+                                    machine. Haltdos UI will now accept the URL.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PART 3 - HALTDOS UI -->
+                    <h2 id="part3-ui">Part 3 — Configure Haltdos Backup Settings</h2>
+
+                    <!-- STEP 11 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">11</div>
+                            <h3>Fill in the S3 Backup Settings in Haltdos UI</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Navigate to:</p>
+                            <div class="nav-path">🗂 System <span>›</span> Instance <span>›</span> [Select Instance]
+                                <span>›</span> Settings <span>›</span> Backup Setting</div>
+
+                            <p>Fill in the fields exactly as shown:</p>
+
+                            <table class="config-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Value</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>S3 Backup Enabled</strong></td>
+                                        <td><span class="toggle-on">Enabled</span></td>
+                                        <td>Toggle on to reveal S3 fields</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 Region</strong></td>
+                                        <td><code>us-east-1</code></td>
+                                        <td>MinIO accepts any region string — use this as a dummy value</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 Bucket Name</strong></td>
+                                        <td><code>haltdos-backup</code></td>
+                                        <td>The bucket created in Step 7</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 Path</strong></td>
+                                        <td><code>logs</code></td>
+                                        <td>Subdirectory inside the bucket where backups are stored</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 Access Key</strong></td>
+                                        <td><code>haltdos-user</code></td>
+                                        <td>The dedicated MinIO user created in Step 7</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 Secret Key</strong></td>
+                                        <td><code>HaltdosSecret@123</code></td>
+                                        <td>Password for the haltdos-user account</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>S3 URL</strong></td>
+                                        <td><code>https://minio.haltdos.local:9000</code></td>
+                                        <td>Must use domain name — private IPs are blocked by Haltdos</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>Click <strong>Save Changes</strong>, then click <strong>Backup Now</strong> to trigger an
+                                immediate backup.</p>
+
+                            <div class="callout danger">
+                                <p>🚨 <strong>Do not use a raw IP address</strong> in the S3 URL field. Haltdos blocks
+                                    all RFC1918 private IP ranges. The URL <code>https://172.16.0.38:9000</code> will be
+                                    rejected. You must use the domain <code>https://minio.haltdos.local:9000</code> that
+                                    you configured in Step 9.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 12 -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">12</div>
+                            <h3>Verify Backup Files Arrived in MinIO</h3>
+                        </div>
+                        <div class="step-body">
+                            <p>Run this on the MinIO VM after clicking Backup Now:</p>
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                                <pre><code>mc ls --recursive myminio/haltdos-backup/ --insecure</code></pre>
+                            </div>
+                            <p>If backup files landed you will see entries like:</p>
+                            <div class="terminal">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dot red"></div>
+                                    <div class="terminal-dot amber"></div>
+                                    <div class="terminal-dot green"></div>
+                                    <span class="terminal-title">bash — root@localhost (MinIO VM)</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <span class="t-line"><span class="t-highlight">[2026-06-18 12:00:01 EDT] 1.2MB
+                                            logs/backup-20260618.tar.gz</span></span>
+                                </div>
+                            </div>
+                            <div class="callout success">
+                                <p>✅ Backup files present in the bucket means the full integration is working
+                                    end-to-end.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REFERENCE -->
+                    <h2 id="quick-reference">Quick Reference</h2>
+
+                    <h3>MinIO Server Summary</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MinIO VM IP</td>
+                                <td><code>172.16.0.38</code></td>
+                            </tr>
+                            <tr>
+                                <td>S3 API</td>
+                                <td><code>https://172.16.0.38:9000</code></td>
+                            </tr>
+                            <tr>
+                                <td>Web Console</td>
+                                <td><code>https://172.16.0.38:9001</code></td>
+                            </tr>
+                            <tr>
+                                <td>Root Username</td>
+                                <td><code>minioadmin</code></td>
+                            </tr>
+                            <tr>
+                                <td>Root Password</td>
+                                <td><code>Haltdos#123</code></td>
+                            </tr>
+                            <tr>
+                                <td>Backup Bucket</td>
+                                <td><code>haltdos-backup</code></td>
+                            </tr>
+                            <tr>
+                                <td>Backup User</td>
+                                <td><code>haltdos-user</code></td>
+                            </tr>
+                            <tr>
+                                <td>Backup User Password</td>
+                                <td><code>HaltdosSecret@123</code></td>
+                            </tr>
+                            <tr>
+                                <td>Domain (for Haltdos)</td>
+                                <td><code>minio.haltdos.local</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Day-to-Day Commands</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Command</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Check MinIO status</td>
+                                <td><code>sudo systemctl status minio.service</code></td>
+                            </tr>
+                            <tr>
+                                <td>View MinIO logs</td>
+                                <td><code>sudo journalctl -u minio -f</code></td>
+                            </tr>
+                            <tr>
+                                <td>List backup files</td>
+                                <td><code>mc ls --recursive myminio/haltdos-backup/ --insecure</code></td>
+                            </tr>
+                            <tr>
+                                <td>Check ports listening</td>
+                                <td><code>ss -tlnp | grep -E '9000|9001'</code></td>
+                            </tr>
+                            <tr>
+                                <td>Test API health</td>
+                                <td><code>curl -k https://localhost:9000/minio/health/live</code></td>
+                            </tr>
+                            <tr>
+                                <td>Restart MinIO</td>
+                                <td><code>sudo systemctl restart minio.service</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TROUBLESHOOTING -->
+                    <h2 id="troubleshooting">Troubleshooting</h2>
+
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Symptom</th>
+                                <th>Cause</th>
+                                <th>Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>"Invalid URL specified" in Haltdos UI</td>
+                                <td>Using <code>http://</code> instead of <code>https://</code></td>
+                                <td>MinIO must run with TLS. Complete Step 8 to generate the cert.</td>
+                            </tr>
+                            <tr>
+                                <td>Private IP rejected in S3 URL field</td>
+                                <td>Haltdos blocks RFC1918 ranges</td>
+                                <td>Use domain name <code>minio.haltdos.local</code> via <code>/etc/hosts</code> entry.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>MinIO fails to start — <code>status=203/EXEC</code></td>
+                                <td>SELinux blocking binary execution</td>
+                                <td>Run <code>sudo chcon -t bin_t /usr/local/bin/minio</code> and restart.</td>
+                            </tr>
+                            <tr>
+                                <td><code>mc alias</code> fails — signature mismatch</td>
+                                <td>Password truncated by <code>#</code> in config file</td>
+                                <td>Edit <code>/etc/default/minio</code> and wrap password in double quotes. Restart
+                                    MinIO.</td>
+                            </tr>
+                            <tr>
+                                <td>SSL cert domain mismatch error</td>
+                                <td>Cert generated without domain name SAN</td>
+                                <td>Regenerate cert with <code>--host</code> including the domain. Repeat Steps 8 and
+                                    10.</td>
+                            </tr>
+                            <tr>
+                                <td>Bucket empty after Backup Now</td>
+                                <td>Offloader not picking up S3 config yet</td>
+                                <td>Wait for the offloader cycle (runs every 5 minutes) or check
+                                    <code>journalctl -u offloader.service</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- QUICK SETUP -->
+                    <h2 id="summary">Complete Setup — All Commands</h2>
+
+                    <p>Run these in order on the <strong>MinIO VM</strong>:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code># 1. Update & install deps
+sudo dnf update -y && sudo dnf install -y wget curl
+
+# 2. Download MinIO binary
+wget https://dl.min.io/server/minio/release/linux-amd64/minio
+sudo cp minio /usr/local/bin/
+sudo chmod +x /usr/local/bin/minio
+sudo chcon -t bin_t /usr/local/bin/minio
+
+# 3. Create user and data dir
+sudo groupadd -r minio-user
+sudo useradd -m -r -g minio-user minio-user
+sudo mkdir -p /data/minio
+sudo chown -R minio-user:minio-user /data/minio
+
+# 4. Create config file
+sudo bash -c 'cat > /etc/default/minio << EOF
+MINIO_VOLUMES="/data/minio"
+MINIO_OPTS="--address :9000 --console-address :9001"
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD="Haltdos#123"
+EOF'
+sudo chown minio-user:minio-user /etc/default/minio
+sudo chmod 600 /etc/default/minio
+
+# 5. Create systemd service
+sudo bash -c 'cat > /etc/systemd/system/minio.service << EOF
+[Unit]
+Description=MinIO Object Storage
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable=/usr/local/bin/minio
+
+[Service]
+WorkingDirectory=/usr/local/
+User=minio-user
+Group=minio-user
+EnvironmentFile=-/etc/default/minio
+ExecStart=/usr/local/bin/minio server \$MINIO_OPTS \$MINIO_VOLUMES
+Restart=always
+LimitNOFILE=65536
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target
+EOF'
+sudo systemctl daemon-reload
+sudo systemctl enable --now minio.service
+
+# 6. Open firewall
+sudo firewall-cmd --permanent --add-port=9000/tcp
+sudo firewall-cmd --permanent --add-port=9001/tcp
+sudo firewall-cmd --reload
+
+# 7. Install mc and setup bucket + user
+curl -sLO https://dl.min.io/client/mc/release/linux-amd64/mc
+sudo chmod +x mc && sudo chcon -t bin_t mc && sudo mv mc /usr/local/bin/
+mc alias set myminio http://localhost:9000 minioadmin "Haltdos#123"
+mc mb myminio/haltdos-backup
+mc admin user add myminio haltdos-user "HaltdosSecret@123"
+mc admin policy attach myminio readwrite --user haltdos-user
+
+# 8. Generate HTTPS cert
+wget https://github.com/minio/certgen/releases/latest/download/certgen-linux-amd64
+chmod +x certgen-linux-amd64
+./certgen-linux-amd64 --host "127.0.0.1,localhost,172.16.0.38,minio.haltdos.local"
+sudo mkdir -p /home/minio-user/.minio/certs
+sudo mv public.crt /home/minio-user/.minio/certs/
+sudo mv private.key /home/minio-user/.minio/certs/
+sudo chown -R minio-user:minio-user /home/minio-user/.minio/
+sudo systemctl restart minio.service</code></pre>
+                    </div>
+
+                    <p>Then run these on the <strong>Haltdos VM</strong>:</p>
+
+                    <div class="code-block-wrap">
+                        <button class="copy-btn" onclick="copyCode(this)"><span>Copy</span></button>
+                        <pre><code># 9. Add domain entry
+echo "172.16.0.38  minio.haltdos.local" | sudo tee -a /etc/hosts
+
+# 10. Trust the cert
+scp root@172.16.0.38:/home/minio-user/.minio/certs/public.crt /tmp/minio-selfsigned.crt
+sudo cp /tmp/minio-selfsigned.crt /etc/pki/ca-trust/source/anchors/minio-selfsigned.crt
+sudo update-ca-trust
+
+# 11. Verify (must show SSL certificate verify ok + 200 OK)
+curl -v https://minio.haltdos.local:9000/minio/health/live</code></pre>
+                    </div>
+
+                </div>
+
+                <div class="doc-nav-footer">
+                    <a class="doc-nav-btn prev" href="ldap-server-setup-rocky.html">
+                        <span class="doc-nav-label">← Previous</span>
+                        <span class="doc-nav-title">LDAP Server Setup</span>
+                    </a>
+                    <a class="doc-nav-btn next" href="vercel-waf-onboarding.html">
+                        <span class="doc-nav-label">Next →</span>
+                        <span class="doc-nav-title">Vercel WAF Onboarding</span>
+                    </a>
+                </div>
+
+                <div class="doc-footer-bar">Haltdos Docs · MinIO S3 Backup Setup</div>
+
+            </main>
+
+            <aside class="doc-toc" id="docToc">
+                <div class="doc-toc-title">On this page</div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const DOCS = [
+                { title: 'Binary Components Upload', icon: '⚙️', status: 'done', desc: 'ADC build and release guide for all components', href: 'binary-components-upload.html' },
+                { title: 'Haltdos Installer', icon: '🛠️', status: 'done', desc: 'Build the haltdos-installer binary from source', href: 'haltdos-installer.html' },
+                { title: 'Haltdos Installation Methods', icon: '📦', status: 'done', desc: 'wget, Go installer, and Java standalone methods', href: 'installer-methods.html' },
+                { title: 'Email Integration', icon: '📧', status: 'done', desc: 'SMTP email configuration — server, auth, encryption', href: 'email-integration.html' },
+                { title: 'TACACS CHAP Login Guide', icon: '🔐', status: 'done', desc: 'TACACS user setup and CHAP authentication login', href: 'tacacs-chap-login.html' },
+                { title: 'TACACS+ Server Setup Rocky Linux', icon: '🖥️', status: 'done', desc: 'Setup TACACS+ server on Rocky Linux using Docker', href: 'tacacs-server-setup-rocky.html' },
+                { title: 'LDAP Server Setup Rocky Linux', icon: '📂', status: 'done', desc: 'Setup 389 Directory Server and integrate with Haltdos', href: 'ldap-server-setup-rocky.html' },
+                { title: 'MinIO S3 Backup Setup', icon: '🗄️', status: 'done', desc: 'Setup MinIO on Rocky Linux for Haltdos S3 backup', href: 'minio-s3-backup-setup.html' },
+                { title: 'Vercel App on Haltdos WAF', icon: '🛡️', status: 'in-progress', desc: 'Onboard a Vercel app onto the Haltdos Enterprise WAF', href: 'vercel-waf-onboarding.html' },
+                { title: 'Webhook Testing Guide', icon: '🪝', status: 'done', desc: 'Step-by-step webhook verification using webhook.site', href: 'webhook-testing-guide.html' },
+            ];
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem('hd-theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            function updateThemeUI(t) { themeIcon.textContent = t === 'dark' ? '☀️' : '🌙'; themeLabel.textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; }
+            updateThemeUI(savedTheme);
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next); localStorage.setItem('hd-theme', next); updateThemeUI(next);
+            });
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => { bar.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+            const toc = document.getElementById('docToc');
+            document.querySelectorAll('.doc-content h2').forEach((h, i) => {
+                if (!h.id) h.id = 'section-' + i;
+                const a = document.createElement('a');
+                a.className = 'toc-item'; a.href = '#' + h.id; a.textContent = h.textContent;
+                toc.appendChild(a);
+            });
+            document.querySelectorAll('.doc-content h2').forEach(h => {
+                new IntersectionObserver(entries => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) {
+                            toc.querySelectorAll('.toc-item').forEach(l => l.classList.remove('active'));
+                            const a = toc.querySelector(`a[href="#${e.target.id}"]`);
+                            if (a) a.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-10% 0px -80% 0px' }).observe(h);
+            });
+            window.copyCode = function (btn) {
+                navigator.clipboard.writeText(btn.nextElementSibling.textContent.trim()).then(() => {
+                    btn.classList.add('copied'); btn.querySelector('span').textContent = '✓ Copied';
+                    setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'Copy'; }, 2000);
+                });
+            };
+            const overlay = document.getElementById('searchOverlay'), searchInput = document.getElementById('searchInput'), searchResults = document.getElementById('searchResults');
+            let selectedIdx = -1;
+            function openSearch() { overlay.classList.add('open'); searchInput.focus(); renderResults(''); }
+            function closeSearch() { overlay.classList.remove('open'); searchInput.value = ''; selectedIdx = -1; }
+            function renderResults(q) {
+                const query = q.toLowerCase().trim();
+                const filtered = query === '' ? DOCS : DOCS.filter(d => d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query));
+                if (!filtered.length) { searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`; return; }
+                searchResults.innerHTML = filtered.map((d, i) => `
+        <a class="search-result-item ${i === selectedIdx ? 'selected' : ''}" href="${d.href}">
+          <div class="search-result-icon">${d.icon}</div>
+          <div class="search-result-text">
+            <div class="search-result-title">${d.title}</div>
+            <div class="search-result-desc">${d.desc}</div>
+          </div>
+          <span class="search-result-tag ${d.status === 'done' ? 'done' : d.status === 'in-progress' ? 'progress' : 'draft'}">
+            ${d.status === 'in-progress' ? 'In Progress' : d.status.charAt(0).toUpperCase() + d.status.slice(1)}
+          </span>
+        </a>`).join('');
+            }
+            searchInput.addEventListener('input', e => { selectedIdx = -1; renderResults(e.target.value); });
+            searchInput.addEventListener('keydown', e => {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx + 1, items.length - 1); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx - 1, 0); items.forEach((el, i) => el.classList.toggle('selected', i === selectedIdx)); items[selectedIdx]?.scrollIntoView({ block: 'nearest' }); }
+                else if (e.key === 'Enter' && selectedIdx >= 0) items[selectedIdx]?.click();
+                else if (e.key === 'Escape') closeSearch();
+            });
+            document.getElementById('topbarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('sidebarSearchBtn').addEventListener('click', openSearch);
+            document.getElementById('searchClose').addEventListener('click', closeSearch);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+            document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); overlay.classList.contains('open') ? closeSearch() : openSearch(); } });
+        })();
+    </script>
+
+</body>
+
+</html>
